@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h1>Lista de capítulos de Friends:</h1>
+<ul>
+    {% for episodio in episodios %}
+    <li>{{ episodio.name }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

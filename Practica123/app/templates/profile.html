@@ -1,0 +1,43 @@
+<!--
+  -- ─── PROFILE ────────────────────────────────────────────────────────────────────
+  -->
+
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h1>Perfil</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class=flashes>
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+{% if status == 1 %}
+<dl>
+    <dt>Nombre de usuario:
+    <dd>{{ user['username'] }}
+    <dt>Nombre:
+    <dd>{{ user['name'] }}
+    <dt>e-mail:
+    <dd>{{ user['email'] }}
+    <dt>Phone:
+    <dd>{{ user['phone'] }}
+</dl>
+<b>¿Deseas modificar tus datos?</b>
+<form action={{ url_for('modify_user') }}>
+    <input type="submit" value="Modificar datos" />
+</form>
+{% else %}
+<b>¿Deseas iniciar sesión?</b>>
+<form action={{ url_for('login') }}>
+    <input type="submit" value="Login" />
+</form>
+{% endif %}
+
+{% endblock %}

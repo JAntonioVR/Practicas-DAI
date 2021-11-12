@@ -1,0 +1,44 @@
+<!--
+  -- ─── MODIFICAR DATOS DE USUARIO ─────────────────────────────────────────────────
+  -->
+
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h1>Modifica tus datos</h1>
+
+{% if status == 0 and user %}
+<form method=post>
+    <dl>
+        <dt>{{ user['username'] }}
+        <dt>Nombre:
+        <dd><input type=text name=name value="{{ user['name'] }}">
+        <dt>e-mail:
+        <dd><input type=text name=email value="{{ user['email'] }}">
+        <dt>Teléfono:
+        <dd><input type=text name=phone value="{{ user['phone'] }}">
+    </dl>
+    <p><input type=submit value="Modificar datos">
+</form>
+
+{% else %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class=flashes>
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<form action={{ url_for('login') }}>
+    <input type="submit" value="Login" />
+</form>
+
+{% endif %}
+
+
+
+{% endblock %}

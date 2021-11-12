@@ -1,0 +1,44 @@
+<!--
+  -- ─── SIGN UP ────────────────────────────────────────────────────────────────────
+  -->
+
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h1>Sign Up</h1>
+
+{% if status == 0 %}
+<form method=post>
+    <dl>
+        <dt>Nombre de usuario:
+        <dd><input type=text name=username value="{{ request.form.username }}">
+        <dt>Contraseña:
+        <dd><input type=password name=password>
+        <dt>Nombre:
+        <dd><input type=text name=name>
+        <dt>e-mail:
+        <dd><input type=text name=email>
+        <dt>Teléfono:
+        <dd><input type=text name=phone>
+    </dl>
+    <p><input type=submit value="Sign Up!">
+</form>
+
+{% else %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class=flashes>
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% endif %}
+
+<form action={{ url_for('login') }}>
+    <input type="submit" value="Login" />
+</form>
+
+{% endblock %}

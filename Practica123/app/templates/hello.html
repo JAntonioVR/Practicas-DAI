@@ -1,0 +1,45 @@
+<!--
+  -- ─── EJERCICIOS P1 ──────────────────────────────────────────────────────────────
+  -->
+
+{% extends "index.html" %}
+
+{% block contenido %}
+
+{% if ejercicio == 1 %}
+<h1>Bienvenidos:</h1>
+<ul>
+    {% for member in members %}
+    <li>{{ member }}</li>
+    {% endfor %}
+</ul>
+
+{% elif ejercicio == 2 %}
+
+<form method=post action="./ordena">
+    <div class="form-group">
+        <h2>Introduce una lista de enteros:</h2>
+        <input type=text name="lista" id="lista">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% if res %}
+{{ res }}
+{% endif %}
+
+{% elif ejercicio == 3 %}
+
+<form method=post action="./criba">
+    <div class="form-group">
+        <h2>Introduce un número natural:</h2>
+        <input type=text name="numero" id="numero">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% if res %}
+{{ res }}
+{% endif %}
+
+{% endif %}
+
+{% endblock %}
