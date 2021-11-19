@@ -2,11 +2,28 @@
 
 {% block contenido %}
 
-<h1>Lista de capítulos de Friends:</h1>
+<h1>Búsqueda de capítulos de Friends:</h1>
+
+<form name="Item_1" action="/busca_coleccion" method="POST">
+    <label for="exampleFormControlFile2">Tipo: </label>
+    <select name="temporada">
+        {% for temporada in temporadas %}
+        <option value="{{ temporada }}" SELECTED>{{ temporada }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">Buscar</button>
+</form>
+
+{% if status == 1 %}
 <ul>
     {% for episodio in episodios %}
-    <li>{{ episodio.name }}</li>
+    <li>
+        <img src="{{ episodio.image.medium }}">
+        {{ episodio.name }}
+        <br>
+    </li>
     {% endfor %}
 </ul>
+{% endif %}
 
 {% endblock %}

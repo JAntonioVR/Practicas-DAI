@@ -338,3 +338,20 @@ def mongo():
 
 	# a los templates de Jinja hay que pasarle una lista, no el cursor
 	return render_template('lista.html', episodios=lista_episodios)
+
+
+@app.route('/busca_coleccion', methods=['GET', 'POST'])
+def busca_coleccion():
+    status = 0
+    lista_episodios = []
+    episodios = db.samples_friends
+
+    temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10', ]
+
+    if request.method == 'POST':
+        temporada = int(request.form['temporada'].split()[1])
+        for episodio in episodios.find({"season": temporada}):
+            lista_episodios.append(episodio)
+        status = 1
+
+    return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas)
