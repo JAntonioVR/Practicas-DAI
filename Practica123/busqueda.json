@@ -1,0 +1,23 @@
+{
+  "busqueda": {
+    "nombre": "Lion"
+  },
+
+  "anadir": {
+    "id": 111112,
+    "name": "The One With a Lion",
+    "season": 11,
+    "number": 1,
+    "summary": "No sé qué poner"
+  },
+
+  "modificar": {
+    "id": 111112,
+    "summary": "Ahora si se que poner"
+  },
+
+  "eliminar":{
+    "id": 111112
+  }
+
+}

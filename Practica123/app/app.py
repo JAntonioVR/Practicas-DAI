@@ -17,7 +17,8 @@ import math
 import re
 import random
 from model import Database
-from flask import Flask, render_template, flash, render_template, request, session
+from modelMongoDB import DatabaseMongoDB
+from flask import Flask, render_template, flash, render_template, request, session, jsonify
 from pymongo import MongoClient
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -355,3 +356,93 @@ def busca_coleccion():
         status = 1
 
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas)
+
+
+@app.route('/episodio', methods=['GET'])
+def busca_episodio():
+    params = request.get_json()
+
+    if params == None or 'busqueda' not in params:
+        return "Error: Formato incorrecto", 400
+    else:
+        nombre = ""
+        if 'nombre' in params['busqueda']:
+            nombre = params['busqueda']['nombre']
+        db = DatabaseMongoDB()
+        episodios = db.busca_episodios_nombre(nombre)
+        
+        return jsonify(episodios), 200
+
+@app.route('/episodio', methods=['POST'])
+def anade_episodio():
+    params = request.get_json()
+    if params == None or 'anadir' not in params:
+        return "Error: Formato incorrecto", 400
+    else:
+        args = {}
+        if 'id' in params['anadir']:
+            args['id'] = int(params['anadir']['id'])
+        if 'url' in params['anadir']:
+            args['url'] = params['anadir']['url']
+        if 'name' in params['anadir']:
+            args['name'] = params['anadir']['name']
+        if 'season' in params['anadir']:
+            args['season'] = int(params['anadir']['season'])
+        if 'number' in params['anadir']:
+            args['number'] = int(params['anadir']['number'])
+        if 'airdate' in params['anadir']:
+            args['airdate'] = params['anadir']['airdate']
+        if 'airtime' in params['anadir']:
+            args['airtime'] = params['anadir']['airtime']
+        if 'airstamp' in params['anadir']:
+            args['airstamp'] = params['anadir']['airstamp']
+        if 'runtime' in params['anadir']:
+            args['runtime'] = int(params['anadir']['runtime'])
+        if 'image' in params['anadir']:
+            args['image'] = params['anadir']['image']
+        if 'summary' in params['anadir']:
+            args['summary'] = params['anadir']['summary']
+
+        db = DatabaseMongoDB()
+        return db.anade_episodio(args)
+
+@app.route('/episodio', methods=['PUT'])
+def modifica_episodio():
+    params = request.get_json()
+    if params == None or 'modificar' not in params or 'id' not in params['modificar']:
+        return "Error: Formato incorrecto", 400
+    else:
+        args = { 'id' : int(params['modificar']['id']) }
+        if 'url' in params['modificar']:
+            args['url'] = params['modificar']['url']
+        if 'name' in params['modificar']:
+            args['name'] = params['modificar']['name']
+        if 'season' in params['modificar']:
+            args['season'] = int(params['modificar']['season'])
+        if 'number' in params['modificar']:
+            args['number'] = int(params['modificar']['number'])
+        if 'airdate' in params['modificar']:
+            args['airdate'] = params['modificar']['airdate']
+        if 'airtime' in params['modificar']:
+            args['airtime'] = params['modificar']['airtime']
+        if 'airstamp' in params['modificar']:
+            args['airstamp'] = params['modificar']['airstamp']
+        if 'runtime' in params['modificar']:
+            args['runtime'] = int(params['modificar']['runtime'])
+        if 'image' in params['modificar']:
+            args['image'] = params['modificar']['image']
+        if 'summary' in params['modificar']:
+            args['summary'] = params['modificar']['summary']
+
+        db = DatabaseMongoDB()
+        return db.modifica_episodio(args)
+
+@app.route('/episodio', methods=['DELETE'])
+def elimina_episodio():
+    params = request.get_json()
+    if params == None or 'eliminar' not in params or 'id' not in params['eliminar']:
+        return "Error: Formato incorrecto", 400
+    else:
+        id_episodio = params['eliminar']['id']
+        db = DatabaseMongoDB()
+        return db.elimina_episodio(id_episodio)

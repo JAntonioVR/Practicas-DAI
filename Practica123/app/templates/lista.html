@@ -1,5 +1,10 @@
 {% extends "index.html" %}
 
+{% block additional_head %}
+<link href="./static/mystyle.css" rel="stylesheet">
+{% endblock %}
+
+
 {% block contenido %}
 
 <h1>Búsqueda de capítulos de Friends:</h1>
@@ -17,10 +22,11 @@
 {% if status == 1 %}
 <ul>
     {% for episodio in episodios %}
-    <li>
-        <img src="{{ episodio.image.medium }}">
-        {{ episodio.name }}
-        <br>
+    <li style="list-style-type:none">
+        <div class="episodio">
+            <img src="{{ episodio.image.medium }}">
+            {{ episodio.name }}
+        </div>
     </li>
     {% endfor %}
 </ul>
