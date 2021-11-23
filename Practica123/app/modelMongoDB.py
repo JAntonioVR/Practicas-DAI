@@ -30,4 +30,4 @@ class DatabaseMongoDB:
         return dumps(result)
 
     def elimina_episodio(self, id_episodio):
-        return dumps(self.episodios.deleteOne())
+        return dumps(self.episodios.remove({ 'id': id_episodio }))
