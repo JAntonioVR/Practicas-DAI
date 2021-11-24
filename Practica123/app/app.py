@@ -16,18 +16,14 @@
 import math
 import re
 import random
-
-from flask.json import dumps
-from model import Database
-from modelMongoDB import DatabaseMongoDB
-from flask import Flask, render_template, flash, render_template, request, session, jsonify
-from pymongo import MongoClient
 import json
+
+from modelUsers import DatabaseUsers
+from modelFriends import DatabaseFriends
+from flask import Flask, render_template, flash, render_template, request, session, jsonify
+
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
-client = MongoClient("mongo", 27017) # Conectar al servicio (docker) "mongo" en su puerto estandar
-db = client.SampleCollections        # Elegimos la base de datos de ejemplo
 
 
 
@@ -222,7 +218,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     status = 0
-    db = Database()
+    db = DatabaseUsers()
     if request.method == 'POST':
         username = request.form['username']
         passwd = request.form['password']
@@ -248,7 +244,7 @@ def logout():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     status = 0
-    db = Database()
+    db = DatabaseUsers()
     if request.method == 'POST':
         username = request.form['username']
         passwd = request.form['password']
@@ -267,7 +263,7 @@ def signup():
 def profile():
     status = 0
     user = None
-    db = Database()
+    db = DatabaseUsers()
     if('username' in session):
         user = db.buscar_usuario(session['username'])
         if(user != None):
@@ -287,7 +283,7 @@ def profile():
 def modify_user():
     status = 0
     user = None
-    db = Database()
+    db = DatabaseUsers()
     if 'username' in session:
         username = session['username']
         user = db.buscar_usuario(username)
@@ -335,22 +331,22 @@ def add_url_to_session(page):
 def busca_coleccion():
     status = 0
     lista_episodios = []
-    episodios = db.samples_friends
     temporada = 0
-
     temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10', ]
 
     if request.method == 'POST':
         temporada = int(request.form['temporada'].split()[1])
-        for episodio in episodios.find({"season": temporada}):
-            lista_episodios.append(episodio)
+    db = DatabaseFriends()
+
+    lista_episodios = db.busca_episodios_temporada(temporada)
+    if len(lista_episodios) > 0:
         status = 1
 
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
 
 @app.route('/pruebas')
 def prueba():
-    return render_template('pruebas.html', id = DatabaseMongoDB().__buscar_primer_id_disponible__())
+    return render_template('pruebas.html', id = DatabaseFriends().__buscar_primer_id_disponible__())
 
 @app.route('/episodio', methods=['GET'])
 def busca_episodio():
@@ -362,7 +358,7 @@ def busca_episodio():
         nombre = ""
         if 'nombre' in params['busqueda']:
             nombre = params['busqueda']['nombre']
-        db = DatabaseMongoDB()
+        db = DatabaseFriends()
         episodios, status = db.busca_episodios_nombre(nombre)
         
         return jsonify(episodios), status
@@ -397,7 +393,7 @@ def anade_episodio():
         if 'summary' in params['anadir']:
             args['summary'] = params['anadir']['summary']
 
-        db = DatabaseMongoDB()
+        db = DatabaseFriends()
         salida = db.anade_episodio(args)
         salida = "Se ha añadido un nuevo episodio:  " + salida
         return salida, 200
@@ -435,7 +431,7 @@ def modifica_episodio():
         if 'summary' in params['modificar']:
             args['summary'] = params['modificar']['summary']
 
-        db = DatabaseMongoDB()
+        db = DatabaseFriends()
         result = json.loads(db.modifica_episodio(args))
         if (result['ok'] == 1.0):
             salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  "
@@ -458,7 +454,7 @@ def elimina_episodio():
         return "Error: No se ha especificado el id del episodio a eliminar", 400
     else:
         id_episodio = params['eliminar']['id']
-        db = DatabaseMongoDB()
+        db = DatabaseFriends()
         result = json.loads(db.elimina_episodio(id_episodio))
         if(result['ok'] == 1.0):
             salida = "Se ha eliminado el episodio de id " + str(id_episodio)

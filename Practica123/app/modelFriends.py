@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from bson.json_util import dumps
 
-class DatabaseMongoDB:
+class DatabaseFriends:
     def __init__(self):  
         client = MongoClient("mongo", 27017) # Conectar al servicio (docker) "mongo" en su puerto estandar
         self.db = client.SampleCollections        # Elegimos la base de datos de ejemplo
@@ -45,6 +45,15 @@ class DatabaseMongoDB:
             return lista_episodios, 200
         else:
             return "No se ha encontrado ningún episodio", 200
+
+    def busca_episodios_temporada(self, temporada):
+        lista_episodios = []
+        episodios_buscados = self.episodios.find(
+            {"season": temporada}
+        )
+        for episodio in episodios_buscados:
+            lista_episodios.append(episodio)
+        return lista_episodios
 
     def anade_episodio(self, episodio):
         episodio['id'] = self.__buscar_primer_id_disponible__()

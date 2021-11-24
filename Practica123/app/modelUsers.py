@@ -22,7 +22,7 @@ import hashlib
 # ──────────────────────────────────────────────────────────────────────────────
 # Clase que encapsula la interacción con la BD de pickleshare
 
-class Database:
+class DatabaseUsers:
 
     # ─── INICIALIZADOR ──────────────────────────────────────────────────────────────
     def __init__(self):
