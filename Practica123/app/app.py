@@ -345,7 +345,7 @@ def busca_coleccion():
             lista_episodios.append(episodio)
         status = 1
 
-    return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas)
+    return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
 
 
 @app.route('/episodio', methods=['GET'])

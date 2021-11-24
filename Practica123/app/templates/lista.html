@@ -10,7 +10,7 @@
 <h1>Búsqueda de capítulos de Friends:</h1>
 
 <form name="Item_1" action="/busca_coleccion" method="POST">
-    <label for="exampleFormControlFile2">Tipo: </label>
+    <label for="exampleFormControlFile2">Temporada: </label>
     <select name="temporada">
         {% for temporada in temporadas %}
         <option value="{{ temporada }}" SELECTED>{{ temporada }}</option>
@@ -20,16 +20,24 @@
 </form>
 
 {% if status == 1 %}
-<ul>
-    {% for episodio in episodios %}
-    <li style="list-style-type:none">
-        <div class="episodio">
-            <img src="{{ episodio.image.medium }}">
-            {{ episodio.name }}
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
 
-{% endblock %}
+<h2>Capítulos de la temporada {{ temporada_buscada }}</h1>
+
+    <div class="container">
+        <div class="row row-cols-3">
+            {% for episodio in episodios %}
+            <div class="col">
+
+                <div class="episodio">
+                    <a href="{{ episodio.url }}">
+                        <img src="{{ episodio.image.medium }}">
+                        <p>{{ episodio.name }}</p>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% endblock %}
