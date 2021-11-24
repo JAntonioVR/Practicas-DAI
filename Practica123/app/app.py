@@ -336,6 +336,7 @@ def busca_coleccion():
     status = 0
     lista_episodios = []
     episodios = db.samples_friends
+    temporada = 0
 
     temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10', ]
 
@@ -347,6 +348,9 @@ def busca_coleccion():
 
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
 
+@app.route('/pruebas')
+def prueba():
+    return render_template('pruebas.html', id = DatabaseMongoDB().__buscar_primer_id_disponible__())
 
 @app.route('/episodio', methods=['GET'])
 def busca_episodio():
@@ -372,8 +376,6 @@ def anade_episodio():
         return "Error: El fichero de entrada no tiene el formato correcto", 400
     else:
         args = {}
-        if 'id' in params['anadir']:
-            args['id'] = params['anadir']['id']
         if 'url' in params['anadir']:
             args['url'] = params['anadir']['url']
         if 'name' in params['anadir']:
@@ -396,7 +398,8 @@ def anade_episodio():
             args['summary'] = params['anadir']['summary']
 
         db = DatabaseMongoDB()
-        salida = jsonify( "Se ha añadido un nuevo episodio:  " + db.anade_episodio(args))
+        salida = db.anade_episodio(args)
+        salida = "Se ha añadido un nuevo episodio:  " + salida
         return salida, 200
 
 @app.route('/episodio', methods=['PUT'])

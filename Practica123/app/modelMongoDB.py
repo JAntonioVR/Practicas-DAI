@@ -7,6 +7,16 @@ class DatabaseMongoDB:
         self.db = client.SampleCollections        # Elegimos la base de datos de ejemplo
         self.episodios = self.db.samples_friends
 
+    def __buscar_primer_id_disponible__(self):
+        mayor_id = 0
+        salida = ""
+
+        for episodio in self.episodios.find():
+            if 'id' in episodio:
+                if episodio['id'] > mayor_id:
+                    mayor_id = episodio['id']
+        return mayor_id + 1
+
     def busca_episodio_id(self, id):
         episodios_buscados = self.episodios.find(
             { 'id': id }
@@ -14,7 +24,7 @@ class DatabaseMongoDB:
         episodios = []
         for episodio in episodios_buscados:
             episodios.append(dumps(episodio))
-            
+
         if(len(episodios) > 0):
             return episodios
         else:
@@ -37,6 +47,7 @@ class DatabaseMongoDB:
             return "No se ha encontrado ningún episodio", 200
 
     def anade_episodio(self, episodio):
+        episodio['id'] = self.__buscar_primer_id_disponible__()
         return dumps(self.episodios.insert(episodio))
 
     def modifica_episodio(self, episodio):

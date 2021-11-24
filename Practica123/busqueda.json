@@ -4,20 +4,19 @@
   },
 
   "anadir": {
-    "id": 111112,
     "name": "The One With a Lion",
     "season": 11,
     "number": 1,
-    "summary": "No sé qué poner"
+    "summary": "No se que poner"
   },
 
   "modificar": {
-    "id": 111112,
-    "summary": "Ahora so se que poner"
+    "id": 40882.0,
+    "summary": "Ahora si se que poner"
   },
 
   "eliminar":{
-    "id": 111112
+    "id": 40882.0
   }
 
 }
