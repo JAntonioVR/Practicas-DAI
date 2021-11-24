@@ -38,9 +38,6 @@
 					<li class="nav-item">
 						<a class="nav-link active" aria-current="page" href={{ url_for('index') }}>Home</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Link</a>
-					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,6 +48,9 @@
 							<li><a class="dropdown-item" href="./ordena">Ejercicio 2</a></li>
 							<li><a class="dropdown-item" href="./criba">Ejercicio 3</a></li>
 						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('busca_coleccion') }}">Episodios de FRIENDS</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link disabled">Disabled</a>

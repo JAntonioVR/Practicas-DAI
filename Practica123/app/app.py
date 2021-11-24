@@ -16,10 +16,13 @@
 import math
 import re
 import random
+
+from flask.json import dumps
 from model import Database
 from modelMongoDB import DatabaseMongoDB
 from flask import Flask, render_template, flash, render_template, request, session, jsonify
 from pymongo import MongoClient
+import json
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
@@ -327,19 +330,6 @@ def add_url_to_session(page):
 
 # ─── PRACTICA 3 ─────────────────────────────────────────────────────────────────
 
-@app.route('/mongo')
-def mongo():
-	# Encontramos los documentos de la coleccion "samples_friends"
-	episodios = db.samples_friends.find() # devuelve un cursor(*), no una lista ni un iterador
-
-	lista_episodios = []
-	for episodio in episodios:
-		app.logger.debug(episodio) # salida consola
-		lista_episodios.append(episodio)
-
-	# a los templates de Jinja hay que pasarle una lista, no el cursor
-	return render_template('lista.html', episodios=lista_episodios)
-
 
 @app.route('/busca_coleccion', methods=['GET', 'POST'])
 def busca_coleccion():
@@ -369,19 +359,21 @@ def busca_episodio():
         if 'nombre' in params['busqueda']:
             nombre = params['busqueda']['nombre']
         db = DatabaseMongoDB()
-        episodios = db.busca_episodios_nombre(nombre)
+        episodios, status = db.busca_episodios_nombre(nombre)
         
-        return jsonify(episodios), 200
+        return jsonify(episodios), status
 
 @app.route('/episodio', methods=['POST'])
 def anade_episodio():
     params = request.get_json()
-    if params == None or 'anadir' not in params:
-        return "Error: Formato incorrecto", 400
+    if params == None:
+        return "Error: No se ha encontrado fichero de entrada", 400
+    elif 'anadir' not in params:
+        return "Error: El fichero de entrada no tiene el formato correcto", 400
     else:
         args = {}
         if 'id' in params['anadir']:
-            args['id'] = int(params['anadir']['id'])
+            args['id'] = params['anadir']['id']
         if 'url' in params['anadir']:
             args['url'] = params['anadir']['url']
         if 'name' in params['anadir']:
@@ -404,15 +396,21 @@ def anade_episodio():
             args['summary'] = params['anadir']['summary']
 
         db = DatabaseMongoDB()
-        return db.anade_episodio(args)
+        salida = jsonify( "Se ha añadido un nuevo episodio:  " + db.anade_episodio(args))
+        return salida, 200
 
 @app.route('/episodio', methods=['PUT'])
 def modifica_episodio():
     params = request.get_json()
-    if params == None or 'modificar' not in params or 'id' not in params['modificar']:
-        return "Error: Formato incorrecto", 400
+    if params == None:
+        return "Error: No se ha encontrado fichero de entrada", 400
+    elif 'modificar' not in params:
+        return "Error: El fichero de entrada no tiene el formato correcto", 400
+    elif 'id' not in params['modificar']:
+        return "Error: No se ha especificado el id del episodio a modificar", 400
     else:
-        args = { 'id' : int(params['modificar']['id']) }
+        id_episodio = int(params['modificar']['id'])
+        args = { 'id' : id_episodio }
         if 'url' in params['modificar']:
             args['url'] = params['modificar']['url']
         if 'name' in params['modificar']:
@@ -435,14 +433,30 @@ def modifica_episodio():
             args['summary'] = params['modificar']['summary']
 
         db = DatabaseMongoDB()
-        return db.modifica_episodio(args)
+        result = json.loads(db.modifica_episodio(args))
+        if (result['ok'] == 1.0):
+            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  "
+            episodio = db.busca_episodio_id(id_episodio)
+            if episodio != None:
+                episodio = episodio[0]
+            salida += episodio
+            return salida, 200
+        else:
+            return "Ha ocurrido algún error en la modificación", 400
 
 @app.route('/episodio', methods=['DELETE'])
 def elimina_episodio():
     params = request.get_json()
-    if params == None or 'eliminar' not in params or 'id' not in params['eliminar']:
-        return "Error: Formato incorrecto", 400
+    if params == None:
+        return "Error: No se ha encontrado fichero de entrada", 400
+    elif 'eliminar' not in params:
+        return "Error: Formato incorrecto", 400 
+    elif 'id' not in params['eliminar']:
+        return "Error: No se ha especificado el id del episodio a eliminar", 400
     else:
         id_episodio = params['eliminar']['id']
         db = DatabaseMongoDB()
-        return db.elimina_episodio(id_episodio)
+        result = json.loads(db.elimina_episodio(id_episodio))
+        if(result['ok'] == 1.0):
+            salida = "Se ha eliminado el episodio de id " + str(id_episodio)
+        return salida, 200

@@ -143,4 +143,5 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-Practica123/datos_db
+/Practica123/datos_db
+/Practica1

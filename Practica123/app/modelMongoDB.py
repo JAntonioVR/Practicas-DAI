@@ -6,7 +6,21 @@ class DatabaseMongoDB:
         client = MongoClient("mongo", 27017) # Conectar al servicio (docker) "mongo" en su puerto estandar
         self.db = client.SampleCollections        # Elegimos la base de datos de ejemplo
         self.episodios = self.db.samples_friends
-    
+
+    def busca_episodio_id(self, id):
+        episodios_buscados = self.episodios.find(
+            { 'id': id }
+        )
+        episodios = []
+        for episodio in episodios_buscados:
+            episodios.append(dumps(episodio))
+            
+        if(len(episodios) > 0):
+            return episodios
+        else:
+            return None
+
+
     def busca_episodios_nombre(self, nombre):
 
         lista_episodios = []
@@ -17,7 +31,10 @@ class DatabaseMongoDB:
 
         for episodio in episodios_buscados:
             lista_episodios.append(dumps(episodio))
-        return lista_episodios
+        if len(lista_episodios) > 0:
+            return lista_episodios, 200
+        else:
+            return "No se ha encontrado ningún episodio", 200
 
     def anade_episodio(self, episodio):
         return dumps(self.episodios.insert(episodio))
