@@ -324,45 +324,77 @@ def add_url_to_session(page):
     session['urls'] = session['urls']
 
 
-# ─── PRACTICA 3 ─────────────────────────────────────────────────────────────────
+#
+# ──────────────────────────────────────────────────────────── I ──────────
+#   :::::: P R A C T I C A   3 : :  :   :    :     :        :          :
+# ──────────────────────────────────────────────────────────────────────
+#
 
-
+# ─── BUSQUEDA DE CAPITULOS POR TEMPORADA ────────────────────────────────────────
 @app.route('/busca_coleccion', methods=['GET', 'POST'])
 def busca_coleccion():
     status = 0
     lista_episodios = []
     temporada = 0
-    temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10', ]
+    temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10' ]
 
     if request.method == 'POST':
         temporada = int(request.form['temporada'].split()[1])
-    db = DatabaseFriends()
 
+    db = DatabaseFriends()
     lista_episodios = db.busca_episodios_temporada(temporada)
     if len(lista_episodios) > 0:
         status = 1
 
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
 
-@app.route('/pruebas')
-def prueba():
-    return render_template('pruebas.html', id = DatabaseFriends().__buscar_primer_id_disponible__())
+#
+# ──────────────────────────────────────────────────────────────── II ──────────
+#   :::::: A P I   R E S T F U L L : :  :   :    :     :        :          :
+# ──────────────────────────────────────────────────────────────────────────
+#
 
+
+# ─── BUSCAR EPISODIO POR NOMBRE Y SINOPSIS ──────────────────────────────────────
+# En el campo 'busqueda' debe haber un campo 'nombre' o un campo 'sinopsis'. 
+# Se buscarán episodios que contengan la subcadena 'nombre' en el nombre del 
+# episodio y la subcadena 'sinopsis' en la sinopsis. Si alguno de los dos campos
+# no se especifica se busca solo en base al otro.
+# Devuelve todos los episodios encontrados en formato json.
 @app.route('/episodio', methods=['GET'])
 def busca_episodio():
     params = request.get_json()
 
-    if params == None or 'busqueda' not in params:
-        return "Error: Formato incorrecto", 400
+    if params == None:
+        return "Error: No se ha encontrado fichero de entrada", 400
+    elif 'busqueda' not in params:
+        return "Error: El fichero de entrada no tiene el formato correcto", 400
+    elif 'nombre' not in params['busqueda'] and 'sinopsis' not in params['busqueda']:
+        return "Error: No se ha especificado ningún criterio a buscar", 400
     else:
-        nombre = ""
+        nombre, sinopsis = "", ""
         if 'nombre' in params['busqueda']:
             nombre = params['busqueda']['nombre']
-        db = DatabaseFriends()
-        episodios, status = db.busca_episodios_nombre(nombre)
-        
-        return jsonify(episodios), status
+        if 'sinopsis' in params['busqueda']:
+            sinopsis = params['busqueda']['sinopsis']
 
+        db = DatabaseFriends()
+        episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
+        if len(episodios) > 0:
+            return jsonify(episodios), 200
+        else:
+            return "No se ha encontrado ningún episodio.", 200
+
+
+# ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
+# En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
+# serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
+# atributos 'url', 'name', 'season', 'number', 'airdate', 'airtime', 'airstamp',
+# 'runtime', 'image' y 'summary', aunque todos ellos son opcionales.
+# Se añade a la BD y se devuelve un objeto json con el campo '_id' de tipo
+# ObjectID con el que se almacena en la BD. No es necesario especificar el campo
+# 'id' porque al insertar el capítulo se genera automáticamente un identificador
+# entero único para el nuevo episodio.
 @app.route('/episodio', methods=['POST'])
 def anade_episodio():
     params = request.get_json()
@@ -372,6 +404,7 @@ def anade_episodio():
         return "Error: El fichero de entrada no tiene el formato correcto", 400
     else:
         args = {}
+        # Parseado de los parametros
         if 'url' in params['anadir']:
             args['url'] = params['anadir']['url']
         if 'name' in params['anadir']:
@@ -398,6 +431,14 @@ def anade_episodio():
         salida = "Se ha añadido un nuevo episodio:  " + salida
         return salida, 200
 
+
+# ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────
+# En el campo 'modificar' debe haber un diccionario con varios pares clave-valor 
+# que serán los nuevos valores del episodio. En este caso se requiere también un
+# par clave valor para el atributo 'id', para así referenciar qué capítulo se
+# desea modificar. El episodio referenciado se modifica si existe y se devuelve
+# un mensaje de éxito o error, acompañado de un objeto json con los nuevos valores
+# del episodio modificado en caso de éxito.
 @app.route('/episodio', methods=['PUT'])
 def modifica_episodio():
     params = request.get_json()
@@ -410,6 +451,8 @@ def modifica_episodio():
     else:
         id_episodio = int(params['modificar']['id'])
         args = { 'id' : id_episodio }
+
+        # Parseado de los parametros
         if 'url' in params['modificar']:
             args['url'] = params['modificar']['url']
         if 'name' in params['modificar']:
@@ -431,18 +474,23 @@ def modifica_episodio():
         if 'summary' in params['modificar']:
             args['summary'] = params['modificar']['summary']
 
+        # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
-        result = json.loads(db.modifica_episodio(args))
-        if (result['ok'] == 1.0):
-            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  "
-            episodio = db.busca_episodio_id(id_episodio)
-            if episodio != None:
-                episodio = episodio[0]
-            salida += episodio
+        result = db.modifica_episodio(args)
+
+        # Comprobamos que todo haya ido bien
+        if result != None:
+            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  " + result
             return salida, 200
         else:
-            return "Ha ocurrido algún error en la modificación", 400
+            return "Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
 
+
+# ─── BORRAR EPISODIO ────────────────────────────────────────────────────────────
+# En el campo 'eliminar' debe haber un diccionario con un único par clave-valor,
+# el correspondiente al identificador único del episodio que se desea eliminar, 
+# 'id'. Se elimina el episodio referenciado si existe y se muestra como salida
+# un mensaje de éxito o error.
 @app.route('/episodio', methods=['DELETE'])
 def elimina_episodio():
     params = request.get_json()
@@ -455,7 +503,11 @@ def elimina_episodio():
     else:
         id_episodio = params['eliminar']['id']
         db = DatabaseFriends()
-        result = json.loads(db.elimina_episodio(id_episodio))
-        if(result['ok'] == 1.0):
+        result = db.elimina_episodio(id_episodio)
+        if(result):
             salida = "Se ha eliminado el episodio de id " + str(id_episodio)
-        return salida, 200
+            return salida, 200
+        else:
+            return "Ha ocurrido algún error en la eliminación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
+
+# ────────────────────────────────────────────────────────────────────────────────

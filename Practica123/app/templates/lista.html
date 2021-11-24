@@ -1,3 +1,7 @@
+<!--
+  -- ─── LISTA ──────────────────────────────────────────────────────────────────────
+  -->
+
 {% extends "index.html" %}
 
 {% block additional_head %}
@@ -9,6 +13,7 @@
 
 <h1>Búsqueda de capítulos de Friends:</h1>
 
+<!-- Menu desplegable con las posibles temporadas -->
 <form name="Item_1" action="/busca_coleccion" method="POST">
     <label for="exampleFormControlFile2">Temporada: </label>
     <select name="temporada">
@@ -21,52 +26,54 @@
 
 {% if status == 1 %}
 
-<h2>Capítulos de la temporada {{ temporada_buscada }}</h1>
+<!-- Listado de capitulos -->
+<h2>Capítulos de la temporada {{ temporada_buscada }}</h2>
 
-    <div class="container">
-        <div class="row row-cols-3">
-            {% for episodio in episodios %}
-            <div class="col">
+<div class="container">
+    <div class="row row-cols-3">
+        {% for episodio in episodios %}
+        <div class="col">
 
-                <div class="episodio">
-                    <a href="{{ episodio.url }}">
-                        <img src="{{ episodio.image.medium }}">
-                        <p>{{ episodio.name }}</p>
-                    </a>
-                </div>
+            <div class="episodio">
+                <a href="{{ episodio.url }}">
+                    <img src="{{ episodio.image.medium }}">
+                    <p>{{ episodio.name }}</p>
+                </a>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-    {% endif %}
+</div>
+{% endif %}
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            {% if temporada_buscada == 1 %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-            </li>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link" href="#">Anterior</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada - 1 }}</a></li>
-            {% endif %}
+<!-- Paginador (FIXME)-->
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        {% if temporada_buscada == 1 %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="#">Anterior</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada - 1 }}</a></li>
+        {% endif %}
 
-            <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada }}</a></li>
+        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada }}</a></li>
 
-            {% if temporada_buscada == 10 %}
+        {% if temporada_buscada == 10 %}
 
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Siguiente</a>
-            </li>
-            {% else %}
-            <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada + 1 }}</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Siguiente</a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Siguiente</a>
+        </li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada + 1 }}</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Siguiente</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
 
-    {% endblock %}
+{% endblock %}

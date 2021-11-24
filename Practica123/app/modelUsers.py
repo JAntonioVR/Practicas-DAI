@@ -1,7 +1,7 @@
-# ./app/model.py
+# ./app/modelUsers.py
 #
 # ────────────────────────────────────────────────────────────────
-#   :::::: model.py : :  :   :    :     :        :          :
+#   :::::: modelUsers.py : :  :   :    :     :        :          :
 # ────────────────────────────────────────────────────────────────
 #
 # Práctica 2 de DAI: Plantillas, Manejo de Sesiones y Frameworks CSS
@@ -10,16 +10,17 @@
 # Universidad de Granada
 
 # Fichero que emula el MODELO de una aplicación web, encapsulando el código
-# de la base de datos
+# de la base de datos de usuarios
 
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from pickleshare import *
 import hashlib
 
 #
-# ──────────────────────────────────────────────────────────────────────────────
-#   :::::: C L A S E   D A T A B A S E : :  :   :    :     :        :          :
-# ──────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────────────────
+#   :::::: CLASE   DatabaseUsers : :  :   :    :     :        :          :
+# ────────────────────────────────────────────────────────────────────────────────────────
+#
 # Clase que encapsula la interacción con la BD de pickleshare
 
 class DatabaseUsers:
