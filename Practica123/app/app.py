@@ -402,30 +402,10 @@ def anade_episodio():
         return "Error: No se ha encontrado fichero de entrada", 400
     elif 'anadir' not in params:
         return "Error: El fichero de entrada no tiene el formato correcto", 400
+    elif 'name' not in params['anadir']:
+        return "Error: Es obligatorio especificar el episodio", 400 
     else:
-        args = {}
-        # Parseado de los parametros
-        if 'url' in params['anadir']:
-            args['url'] = params['anadir']['url']
-        if 'name' in params['anadir']:
-            args['name'] = params['anadir']['name']
-        if 'season' in params['anadir']:
-            args['season'] = int(params['anadir']['season'])
-        if 'number' in params['anadir']:
-            args['number'] = int(params['anadir']['number'])
-        if 'airdate' in params['anadir']:
-            args['airdate'] = params['anadir']['airdate']
-        if 'airtime' in params['anadir']:
-            args['airtime'] = params['anadir']['airtime']
-        if 'airstamp' in params['anadir']:
-            args['airstamp'] = params['anadir']['airstamp']
-        if 'runtime' in params['anadir']:
-            args['runtime'] = int(params['anadir']['runtime'])
-        if 'image' in params['anadir']:
-            args['image'] = params['anadir']['image']
-        if 'summary' in params['anadir']:
-            args['summary'] = params['anadir']['summary']
-
+        args = params['anadir']
         db = DatabaseFriends()
         salida = db.anade_episodio(args)
         salida = "Se ha añadido un nuevo episodio:  " + salida
@@ -450,7 +430,8 @@ def modifica_episodio():
         return "Error: No se ha especificado el id del episodio a modificar", 400
     else:
         id_episodio = int(params['modificar']['id'])
-        args = { 'id' : id_episodio }
+        args = params['modificar']
+        '''
 
         # Parseado de los parametros
         if 'url' in params['modificar']:
@@ -470,10 +451,13 @@ def modifica_episodio():
         if 'runtime' in params['modificar']:
             args['runtime'] = int(params['modificar']['runtime'])
         if 'image' in params['modificar']:
-            args['image'] = params['modificar']['image']
+            if 'medium' in params['modificar']['image']:
+                args['image']['medium'] = params['modificar']['image']['medium']
+            if 'original' in params['modificar']['image']:
+                args['image']['original'] = params['modificar']['image']['original']
         if 'summary' in params['modificar']:
             args['summary'] = params['modificar']['summary']
-
+        '''
         # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
         result = db.modifica_episodio(args)

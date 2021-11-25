@@ -12,6 +12,10 @@
     color: #212529;
 }
 
+.episodio a img{
+    width: 100%;
+}
+
 .episodio:hover{
     background-color: #dee2e6;
 }

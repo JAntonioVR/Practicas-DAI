@@ -5,12 +5,19 @@
 
   "anadir": {
     "name": "The One With a Lion",
-    "season": 11,
+    "season": 9,
     "number": 1,
-    "summary": "No se que poner"
+    "summary": "No se que poner",
+    "image": {
+      "medium": "https://i.pinimg.com/originals/1a/de/15/1ade1547b36b1430a8f7c2dd286b4c79.jpg",
+      "original": "https://i.pinimg.com/originals/1a/de/15/1ade1547b36b1430a8f7c2dd286b4c79.jpg"
+    }
   },
 
   "modificar": {
+    "image": {
+      "medium": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs3oDmZ9C20aeDju9cMQyOKRyq36rQWlZhEdwZyJvv6sEzjplDEwoUU4p337YEbbH61qo&usqp=CAU"
+    },
     "id": 40882.0,
     "summary": "Ahora si se que poner"
   },
