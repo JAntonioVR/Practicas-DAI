@@ -16,11 +16,10 @@
 import math
 import re
 import random
-import json
 
 from modelUsers import DatabaseUsers
 from modelFriends import DatabaseFriends
-from flask import Flask, render_template, flash, render_template, request, session, jsonify
+from flask import Flask, render_template, flash, render_template, request, session
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -330,23 +329,32 @@ def add_url_to_session(page):
 # ──────────────────────────────────────────────────────────────────────
 #
 
-# ─── BUSQUEDA DE CAPITULOS POR TEMPORADA ────────────────────────────────────────
-@app.route('/busca_coleccion', methods=['GET', 'POST'])
-def busca_coleccion():
+temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10' ]
+
+# ─── CONSULTA Y VISUALIZACION DE CAPITULOS ──────────────────────────────────────
+def ver_capitulos_temporada(temporada):
     status = 0
     lista_episodios = []
-    temporada = 0
-    temporadas = ['Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6', 'Season 7', 'Season 8', 'Season 9', 'Season 10' ]
-
-    if request.method == 'POST':
-        temporada = int(request.form['temporada'].split()[1])
-
     db = DatabaseFriends()
     lista_episodios = db.busca_episodios_temporada(temporada)
     if len(lista_episodios) > 0:
         status = 1
-
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
+
+# ─── BUSQUEDA DE CAPITULOS POR TEMPORADA ────────────────────────────────────────
+@app.route("/busca_coleccion/<int:temporada>")
+@app.route("/busca_coleccion", methods=['GET', 'POST'])
+def busca_coleccion(temporada=0):
+    if(temporada == 0):
+        if request.method == 'POST':
+            temporada = int(request.form['temporada'].split()[1])
+        else:
+            temporada = 1
+
+    if(temporada < 1 or temporada > 10):
+        temporada = 1
+    
+    return ver_capitulos_temporada(temporada)
 
 #
 # ──────────────────────────────────────────────────────────────── II ──────────
@@ -381,7 +389,7 @@ def busca_episodio():
         db = DatabaseFriends()
         episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
         if len(episodios) > 0:
-            return jsonify(episodios), 200
+            return "\n".join([str(episodio) for episodio in episodios]), 200
         else:
             return "No se ha encontrado ningún episodio.", 200
 
@@ -408,7 +416,7 @@ def anade_episodio():
         args = params['anadir']
         db = DatabaseFriends()
         salida = db.anade_episodio(args)
-        salida = "Se ha añadido un nuevo episodio:  " + salida
+        salida = "Se ha añadido un nuevo episodio:  " + str(salida)
         return salida, 200
 
 
@@ -431,40 +439,14 @@ def modifica_episodio():
     else:
         id_episodio = int(params['modificar']['id'])
         args = params['modificar']
-        '''
 
-        # Parseado de los parametros
-        if 'url' in params['modificar']:
-            args['url'] = params['modificar']['url']
-        if 'name' in params['modificar']:
-            args['name'] = params['modificar']['name']
-        if 'season' in params['modificar']:
-            args['season'] = int(params['modificar']['season'])
-        if 'number' in params['modificar']:
-            args['number'] = int(params['modificar']['number'])
-        if 'airdate' in params['modificar']:
-            args['airdate'] = params['modificar']['airdate']
-        if 'airtime' in params['modificar']:
-            args['airtime'] = params['modificar']['airtime']
-        if 'airstamp' in params['modificar']:
-            args['airstamp'] = params['modificar']['airstamp']
-        if 'runtime' in params['modificar']:
-            args['runtime'] = int(params['modificar']['runtime'])
-        if 'image' in params['modificar']:
-            if 'medium' in params['modificar']['image']:
-                args['image']['medium'] = params['modificar']['image']['medium']
-            if 'original' in params['modificar']['image']:
-                args['image']['original'] = params['modificar']['image']['original']
-        if 'summary' in params['modificar']:
-            args['summary'] = params['modificar']['summary']
-        '''
         # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
         result = db.modifica_episodio(args)
 
         # Comprobamos que todo haya ido bien
         if result != None:
-            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  " + result
+            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  " + str(result)
             return salida, 200
         else:
             return "Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400

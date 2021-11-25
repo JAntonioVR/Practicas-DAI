@@ -55,12 +55,15 @@
         </li>
         {% else %}
         <li class="page-item">
-            <a class="page-link" href="#">Anterior</a>
+            <a class="page-link" href="./busca_coleccion/{{ temporada_buscada-1 }}">Anterior</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada - 1 }}</a></li>
+        <li class="page-item"><a class="page-link" href="./busca_coleccion/{{ temporada_buscada-1 }}">{{
+                temporada_buscada - 1 }}</a></li>
         {% endif %}
 
-        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada }}</a></li>
+        <li class="page-item"><a class="page-link" href="./busca_coleccion/{{ temporada_buscada }}">
+                {{ temporada_buscada }}
+            </a></li>
 
         {% if temporada_buscada == 10 %}
 
@@ -68,9 +71,10 @@
             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Siguiente</a>
         </li>
         {% else %}
-        <li class="page-item"><a class="page-link" href="#">{{ temporada_buscada + 1 }}</a></li>
+        <li class="page-item"><a class="page-link" href="./busca_coleccion/{{ temporada_buscada+1 }}">{{
+                temporada_buscada + 1 }}</a></li>
         <li class="page-item">
-            <a class="page-link" href="#">Siguiente</a>
+            <a class="page-link" href="./busca_coleccion/{{ temporada_buscada+1 }}">Siguiente</a>
         </li>
         {% endif %}
     </ul>

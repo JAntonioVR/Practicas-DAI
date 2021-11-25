@@ -14,7 +14,6 @@
 
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from pymongo import MongoClient
-from bson.json_util import dumps
 
 #
 # ────────────────────────────────────────────────────────────────────────────────────────────
@@ -69,7 +68,7 @@ class DatabaseFriends:
         )
         episodios = []
         for episodio in episodios_buscados:
-            episodios.append(dumps(episodio))
+            episodios.append(episodio)
 
         if(len(episodios) > 0):
             return episodios[0]
@@ -93,7 +92,7 @@ class DatabaseFriends:
         } )
 
         for episodio in episodios_buscados:
-            lista_episodios.append(dumps(episodio))
+            lista_episodios.append(episodio)
 
         return lista_episodios
 
@@ -107,7 +106,7 @@ class DatabaseFriends:
     # Devuelve el campo '_id' del nuevo episodio.
     def anade_episodio(self, episodio):
         episodio['id'] = self.__buscar_primer_id_disponible__()
-        return dumps(self.episodios.insert(episodio))
+        return self.episodios.insert(episodio)
 
 
     # ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────
