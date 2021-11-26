@@ -398,7 +398,7 @@ def busca_episodio():
 # En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
 # serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
 # atributos 'url', 'name', 'season', 'number', 'airdate', 'airtime', 'airstamp',
-# 'runtime', 'image' y 'summary', aunque todos ellos son opcionales.
+# 'runtime', 'image' y 'summary', aunque todos ellos salvo 'name' son opcionales.
 # Se añade a la BD y se devuelve un objeto json con el campo '_id' de tipo
 # ObjectID con el que se almacena en la BD. No es necesario especificar el campo
 # 'id' porque al insertar el capítulo se genera automáticamente un identificador

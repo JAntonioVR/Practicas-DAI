@@ -5,7 +5,7 @@
 {% extends "index.html" %}
 
 {% block additional_head %}
-<link href="./static/mystyle.css" rel="stylesheet">
+<link href="/static/mystyle.css" rel="stylesheet">
 {% endblock %}
 
 
@@ -46,7 +46,7 @@
 </div>
 {% endif %}
 
-<!-- Paginador (FIXME)-->
+<!-- Paginador -->
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-end">
         {% if temporada_buscada == 1 %}

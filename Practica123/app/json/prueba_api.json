@@ -1,28 +1,27 @@
 {
   "busqueda": {
-    "nombre": "Lion"
+    "nombre": "invented"
   },
 
   "anadir": {
-    "name": "The One With a Lion",
+    "name": "The One I've just invented",
     "season": 9,
-    "number": 1,
+    "number": 1000,
     "summary": "No se que poner",
     "image": {
-      "medium": "https://i.pinimg.com/originals/1a/de/15/1ade1547b36b1430a8f7c2dd286b4c79.jpg",
-      "original": "https://i.pinimg.com/originals/1a/de/15/1ade1547b36b1430a8f7c2dd286b4c79.jpg"
+      "medium": "https://images.mediotiempo.com/hrm9IC552FaAV6dL9txLbAzyOYE=/958x596/uploads/media/2019/07/10/a-partid-de-formara-parte.jpg",
+      "original": "https://images.mediotiempo.com/hrm9IC552FaAV6dL9txLbAzyOYE=/958x596/uploads/media/2019/07/10/a-partid-de-formara-parte.jpg"
     }
   },
 
   "modificar": {
     "image": {
-      "medium": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs3oDmZ9C20aeDju9cMQyOKRyq36rQWlZhEdwZyJvv6sEzjplDEwoUU4p337YEbbH61qo&usqp=CAU"
-    },
+      "medium": "https://ichef.bbci.co.uk/news/640/cpsprodpb/17C5/production/_108858060_4f35ff50-a5da-43fc-84db-0f66f0c7ef96.jpg" },
     "id": 40882.0,
     "summary": "Ahora si se que poner"
   },
 
   "eliminar":{
-    "id": 40882.0
+    "id": 40886.0
   }
 }
