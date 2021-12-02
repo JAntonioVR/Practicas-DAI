@@ -96,10 +96,6 @@ class DatabaseFriends:
 
         return lista_episodios
 
-
-
-
-
     # ─── AÑADIR EPISODIO ────────────────────────────────────────────────────────────
     # Inserta un nuevo documento en la colección de episodios. Los campos y los
     # valores del nuevo episodio se encuentran en el diccionario 'episodio'.

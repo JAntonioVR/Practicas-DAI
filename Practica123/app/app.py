@@ -92,6 +92,8 @@ def criba():
     
     return render_template('hello.html', res = res, ejercicio = 3)
 
+# NOTE: A partir del ejercicio 4 no se han implementado enlaces en el menú desplegable
+# de la web de la práctica 2.
 
 # ─── EJERCICIO 1.4 ────────────────────────────────────────────────────────────────
 
@@ -115,10 +117,6 @@ def fibonacci_from_file():
     f.write(str(res))
     f.close()
     return "El resultado es " + str(res) + " y está almacenado en files/salida.txt"
-
-
-# NOTE: A partir del ejercicio 4 no se han implementado enlaces en el menú desplegable
-# de la web de la práctica 2.
 
 
 # ─── EJERCICIO 1.5 ────────────────────────────────────────────────────────────────
@@ -172,7 +170,7 @@ def corchetes(longitud):
 # Verificar email
 @app.route('/verifica_email/<string:email>')
 def verifica_email(email):
-    patron = "\w+@(hotmail|gmail|ugr|outlook)\.(com|es)"
+    patron = "\w+@\w+\.(com|es)"
     result = re.match(patron, email)
     if(result != None):
         return email + " es un correo electrónico"
@@ -263,7 +261,7 @@ def profile():
     status = 0
     user = None
     db = DatabaseUsers()
-    if('username' in session):
+    if('username' in session and session['username'] != None):
         user = db.buscar_usuario(session['username'])
         if(user != None):
             status = 1
@@ -283,7 +281,7 @@ def modify_user():
     status = 0
     user = None
     db = DatabaseUsers()
-    if 'username' in session:
+    if 'username' in session and session['username'] != None:
         username = session['username']
         user = db.buscar_usuario(username)
         if request.method == 'POST' and user != None:

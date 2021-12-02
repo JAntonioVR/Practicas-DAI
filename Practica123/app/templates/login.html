@@ -26,16 +26,17 @@
 <form method=post>
     <dl>
         <dt>Username:
-        <dd><input type=text name=username value="{{ request.form.username }}">
+        <dd><input type=text name=username>
         <dt>Password:
         <dd><input type=password name=password>
     </dl>
     <p><input type=submit value=Login>
 </form>
 {% endif %}
-
+{% if status == 1 %}
 <form action={{ url_for('logout') }}>
     <input type="submit" value="Logout" />
 </form>
+{% endif %}
 
 {% endblock %}

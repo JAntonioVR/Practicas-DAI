@@ -7,7 +7,7 @@ str = ""
 nparentesis = 0
 balanceada = False
 cerradoSinAbrir = False
-for i in range(6):
+for i in range(4):
     if(random.randint(0,2)):
         car = "["
         nparentesis += 1

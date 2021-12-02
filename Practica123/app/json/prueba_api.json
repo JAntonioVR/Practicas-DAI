@@ -17,11 +17,11 @@
   "modificar": {
     "image": {
       "medium": "https://ichef.bbci.co.uk/news/640/cpsprodpb/17C5/production/_108858060_4f35ff50-a5da-43fc-84db-0f66f0c7ef96.jpg" },
-    "id": 40882.0,
+    "id": 40882,
     "summary": "Ahora si se que poner"
   },
 
   "eliminar":{
-    "id": 40886.0
+    "id": 40882
   }
 }

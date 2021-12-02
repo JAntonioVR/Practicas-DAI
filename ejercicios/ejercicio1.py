@@ -7,7 +7,6 @@
 import random as random
 
 number = random.randint(0, 100)
-print(number)
 found = False
 currentNumber = -1
 nIntentos = 10
