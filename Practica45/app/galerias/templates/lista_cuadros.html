@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+<h1>Lista de todos los Cuadros</h1>
+
+<div class="list-group">
+    {% for c in cuadros %}
+    <div class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ c.nombre }}</h5>
+            <small><a href="{% url 'modificar_cuadro' c.id %}">Editar</a>
+                <a href="{% url 'eliminar_cuadro' c.id %}">Eliminar</a></small>
+        </div>
+        <p class="mb-1">{{ c.autor }} ({{ c.fecha_creacion }})</p>
+        <small class="text-muted">{{ c.galeria.nombre }}</small>
+    </div>
+    {% endfor %}
+</div>
+<br>
+<a class="btn btn-primary" href="{% url 'crear_cuadro' %}" role="button">Crear cuadro</a>
+
+{% endblock %}

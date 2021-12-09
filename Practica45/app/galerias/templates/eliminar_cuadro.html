@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h1>Eliminar cuadro</h1>
+
+{% for m in messages %}
+<p>{{ m }}</p>
+{% endfor %}
+
+{% for e in errors %}
+<p>{{ e }}</p>
+{% endfor %}
+<br>
+<a class="btn btn-primary" href="{% url 'consulta_cuadros' %}" role="button">Lista de cuadros</a>
+
+{% endblock %}
