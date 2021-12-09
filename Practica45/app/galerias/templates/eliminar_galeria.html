@@ -1,29 +1,16 @@
 {% extends "index.html" %}
 
-
-{% load crispy_forms_tags %}
-
 {% block contenido %}
 
-<h1>Añade una nueva Galeria</h1>
+<h1>Eliminar galería</h1>
 
 {% for m in messages %}
 <p>{{ m }}</p>
 {% endfor %}
 
-{% if state == 0 %}
-<form method="post" action="crear_galeria">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <br>
-    <button type="submit" class="btn btn-primary">Añadir</button>
-</form>
-{% endif %}
-
 {% for e in errors %}
 <p>{{ e }}</p>
 {% endfor %}
-
 <br>
 <a class="btn btn-primary" href="{% url 'consulta_galerias' %}" role="button">Lista de galerias</a>
 
