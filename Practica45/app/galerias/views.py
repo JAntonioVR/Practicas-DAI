@@ -6,7 +6,8 @@
 
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from django.shortcuts import render
-from .models import Galeria, GaleriaForm, Cuadro, CuadroForm
+from .models import Galeria, Cuadro
+from .forms import GaleriaForm, CuadroForm
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -23,9 +24,9 @@ def index(request):
 
 # ─── CREAR GALERIA ──────────────────────────────────────────────────────────────
 def crear_galeria(request):
-    form = GaleriaForm()
-    state = 0
-    errors = []
+    form     = GaleriaForm()
+    state    = 0
+    errors   = []
     messages = []
     if request.method == 'POST':
         form = GaleriaForm(request.POST)
@@ -39,10 +40,10 @@ def crear_galeria(request):
     else:
         messages.append("Introduce los datos de la nueva galería:")
     return render(request, 'crear_galeria.html', { 
-        'form': form, 
-        'errors': errors, 
+        'form'    : form,
+        'errors'  : errors,
         'messages': messages,
-        'state': state
+        'state'   : state
         })
 
 # ─── CONSULTA/LISTADO DE GALERIAS ───────────────────────────────────────────────
@@ -52,9 +53,9 @@ def consulta_galerias(request):
 
 # ─── MODIFICAR GALERIA ──────────────────────────────────────────────────────────
 def modificar_galeria(request, pk):
-    errors = []
+    errors   = []
     messages = []
-    state = 0
+    state    = 0
     try:
         galeria = Galeria.objects.get(pk=pk)
     except ObjectDoesNotExist:
@@ -72,16 +73,16 @@ def modificar_galeria(request, pk):
             errors.append("Los datos introducidos no eran válidos.")
             state = -1
     return render(request, 'modificar_galeria.html', { 
-        'form': form, 
-        'errors': errors, 
+        'form'    : form,
+        'errors'  : errors,
         'messages': messages,
-        'state': state,
-        'pk' : pk
+        'state'   : state,
+        'pk'      : pk
         })
 
 # ─── ELIMINAR GALERIA ───────────────────────────────────────────────────────────
 def eliminar_galeria(request, pk):
-    errors = []
+    errors   = []
     messages = []
     try:
         galeria = Galeria.objects.get(pk=pk)
@@ -95,7 +96,7 @@ def eliminar_galeria(request, pk):
     else:
         errors.append("Ha ocurrido algún error en el borrado")
     return render(request, 'eliminar_galeria.html', {
-        'errors': errors,
+        'errors'  : errors,
         'messages': messages,
     })
 
@@ -123,10 +124,10 @@ def crear_cuadro(request):
     else:
         messages.append("Introduce los datos del nuevo cuadro:")
     return render(request, 'crear_cuadro.html', { 
-        'form': form, 
-        'errors': errors, 
+        'form'    : form,
+        'errors'  : errors,
         'messages': messages,
-        'state': state
+        'state'   : state
         })
 
 # ─── CONSULTA/LISTADO DE CUADROS ────────────────────────────────────────────────
@@ -136,8 +137,8 @@ def consulta_cuadros(request):
 
 # ─── MODIFICAR CUADRO ───────────────────────────────────────────────────────────
 def modificar_cuadro(request, pk):
-    state = 0
-    errors = []
+    state    = 0
+    errors   = []
     messages = []
     try:
         cuadro = Cuadro.objects.get(pk=pk)
@@ -156,16 +157,16 @@ def modificar_cuadro(request, pk):
             errors.append("Los datos introducidos no eran válidos.")
             state = -1
     return render(request, 'modificar_cuadro.html', { 
-        'form': form, 
-        'errors': errors, 
+        'form'    : form,
+        'errors'  : errors,
         'messages': messages,
-        'state': state,
-        'pk' : pk
+        'state'   : state,
+        'pk'      : pk
         })
 
 # ─── ELIMINAR CUADRO ────────────────────────────────────────────────────────────
 def eliminar_cuadro(request, pk):
-    errors = []
+    errors   = []
     messages = []
     try:
         cuadro = Cuadro.objects.get(pk=pk)
@@ -178,7 +179,7 @@ def eliminar_cuadro(request, pk):
     else:
         errors.append("Ha ocurrido algún error en el borrado")
     return render(request, 'eliminar_cuadro.html', {
-        'errors': errors,
+        'errors'  : errors,
         'messages': messages,
     })
 
