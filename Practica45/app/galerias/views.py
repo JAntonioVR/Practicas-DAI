@@ -83,7 +83,7 @@ def crear_cuadro(request):
     errors = []
     messages = []
     if request.method == 'POST':
-        form = CuadroForm(request.POST)
+        form = CuadroForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.append("El cuadro se ha guardado con éxito.")
@@ -111,7 +111,7 @@ def modificar_cuadro(request, pk):
     errors = []
     messages = []
     if request.method == 'POST':
-        form = CuadroForm(request.POST, instance=cuadro)
+        form = CuadroForm(request.POST, request.FILES, instance=cuadro)
         if form.is_valid():
             form.save()
             messages.append("El cuadro se ha modificado con éxito.")

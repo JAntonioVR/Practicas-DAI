@@ -11,8 +11,15 @@
             <small><a href="{% url 'modificar_cuadro' c.id %}">Editar</a>
                 <a href="{% url 'eliminar_cuadro' c.id %}">Eliminar</a></small>
         </div>
-        <p class="mb-1">{{ c.autor }} ({{ c.fecha_creacion }})</p>
+        <p class="mb-1">{{ c.autor }}
+            {% if c.fecha_creacion %}
+            ({{ c.fecha_creacion }})
+            {% endif %}
+        </p>
         <small class="text-muted">{{ c.galeria.nombre }}</small>
+        {% if c.imagen %}
+        <p><img src="{{ c.imagen.url }}" width="50%"></p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>

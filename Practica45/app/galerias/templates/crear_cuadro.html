@@ -12,7 +12,7 @@
 {% endfor %}
 
 {% if state == 0 %}
-<form method="post" action="crear_cuadro">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|crispy }}
     <br>
@@ -23,8 +23,8 @@
 {% for e in errors %}
 <p>{{ e }}</p>
 {% endfor %}
-<!--
+
 <br>
-<a class="btn btn-primary" href="{% url 'consulta_galerias' %}" role="button">Lista de galerias</a>
--->
+<a class="btn btn-primary" href="{% url 'consulta_cuadros' %}" role="button">Lista de cuadros</a>
+
 {% endblock %}
