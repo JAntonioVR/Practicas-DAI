@@ -7,6 +7,7 @@
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from django.shortcuts import render
 from .models import Galeria, GaleriaForm, Cuadro, CuadroForm
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # ─── HOME ───────────────────────────────────────────────────────────────────────
@@ -51,11 +52,16 @@ def consulta_galerias(request):
 
 # ─── MODIFICAR GALERIA ──────────────────────────────────────────────────────────
 def modificar_galeria(request, pk):
-    galeria = Galeria.objects.get(pk=pk)
-    form = GaleriaForm(instance=galeria)
-    state = 0
     errors = []
     messages = []
+    state = 0
+    try:
+        galeria = Galeria.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        state = -1
+        return handle_exception(request, pk, 'modificar_galeria.html', 
+        {'errors': errors, 'messages': messages, 'state': state, 'pk': pk})
+    form = GaleriaForm(instance=galeria)
     if request.method == 'POST':
         form = GaleriaForm(request.POST, instance=galeria)
         if form.is_valid():
@@ -75,11 +81,15 @@ def modificar_galeria(request, pk):
 
 # ─── ELIMINAR GALERIA ───────────────────────────────────────────────────────────
 def eliminar_galeria(request, pk):
-    galeria = Galeria.objects.get(pk=pk)
-    nombre_galeria = galeria.nombre
-    borrado = galeria.delete()
     errors = []
     messages = []
+    try:
+        galeria = Galeria.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return handle_exception(request, pk, 'eliminar_galeria.html', {'errors': errors, 'messages': messages})
+    
+    nombre_galeria = galeria.nombre
+    borrado = galeria.delete()
     if borrado[0] > 0:
         messages.append("Se ha eliminado la siguiente galeria: " + nombre_galeria)
     else:
@@ -126,11 +136,16 @@ def consulta_cuadros(request):
 
 # ─── MODIFICAR CUADRO ───────────────────────────────────────────────────────────
 def modificar_cuadro(request, pk):
-    cuadro = Cuadro.objects.get(pk=pk) # TODO Implementar la posibilidad de que esto reviente
-    form = CuadroForm(instance=cuadro)
     state = 0
     errors = []
     messages = []
+    try:
+        cuadro = Cuadro.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        state = -1
+        return handle_exception(request, pk, 'modificar_cuadro.html',
+            {'errors': errors, 'messages': messages, 'state': state, 'pk':pk})
+    form = CuadroForm(instance=cuadro)
     if request.method == 'POST':
         form = CuadroForm(request.POST, request.FILES, instance=cuadro)
         if form.is_valid():
@@ -150,11 +165,14 @@ def modificar_cuadro(request, pk):
 
 # ─── ELIMINAR CUADRO ────────────────────────────────────────────────────────────
 def eliminar_cuadro(request, pk):
-    cuadro = Cuadro.objects.get(pk=pk)
-    nombre_cuadro = cuadro.nombre
-    borrado = cuadro.delete()
     errors = []
     messages = []
+    try:
+        cuadro = Cuadro.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return handle_exception(request, pk, 'eliminar_cuadro.html', {'errors': errors, 'messages': messages} )
+    nombre_cuadro = cuadro.nombre
+    borrado = cuadro.delete()
     if borrado[0] > 0:
         messages.append("Se ha eliminado el siguiente cuadro: " + nombre_cuadro)
     else:
@@ -165,3 +183,10 @@ def eliminar_cuadro(request, pk):
     })
 
 # ────────────────────────────────────────────────────────────────────────────────
+
+def handle_exception(request, id, template, args):
+    error = "ERROR: No se ha encontrado el objeto de id " + str(id)
+    if(not args['errors']):
+        args['errors'] = []
+    args['errors'].append(error)
+    return render(request, template, args)
