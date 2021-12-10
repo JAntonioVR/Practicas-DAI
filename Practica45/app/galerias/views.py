@@ -1,17 +1,26 @@
-# galerias/views.py
+#
+# ────────────────────────────────────────────────────────────────────────────────────
+#   :::::: galerias/views.py : :  :   :    :     :        :          :
+# ────────────────────────────────────────────────────────────────────────────────────
+#
 
-from django.shortcuts import render, HttpResponse
-from django.views.generic import CreateView
+# ─── IMPORTS ────────────────────────────────────────────────────────────────────
+from django.shortcuts import render
 from .models import Galeria, GaleriaForm, Cuadro, CuadroForm
-# Create your views here.
 
+
+# ─── HOME ───────────────────────────────────────────────────────────────────────
 def index(request):
-    return HttpResponse('Hello World!')
-
-def test_template(request):
     context = {}   # Aquí van la las variables para la plantilla
     return render(request,'index.html', context)
 
+#
+# ──────────────────────────────────────────────────────────────────
+#   :::::: G A L E R I A S : :  :   :    :     :        :          :
+# ──────────────────────────────────────────────────────────────────
+#
+
+# ─── CREAR GALERIA ──────────────────────────────────────────────────────────────
 def crear_galeria(request):
     form = GaleriaForm()
     state = 0
@@ -35,10 +44,12 @@ def crear_galeria(request):
         'state': state
         })
 
+# ─── CONSULTA/LISTADO DE GALERIAS ───────────────────────────────────────────────
 def consulta_galerias(request):
     galerias = Galeria.objects.all()
     return render(request, 'lista_galeria.html', {'galerias': galerias})
 
+# ─── MODIFICAR GALERIA ──────────────────────────────────────────────────────────
 def modificar_galeria(request, pk):
     galeria = Galeria.objects.get(pk=pk)
     form = GaleriaForm(instance=galeria)
@@ -62,6 +73,7 @@ def modificar_galeria(request, pk):
         'pk' : pk
         })
 
+# ─── ELIMINAR GALERIA ───────────────────────────────────────────────────────────
 def eliminar_galeria(request, pk):
     galeria = Galeria.objects.get(pk=pk)
     nombre_galeria = galeria.nombre
@@ -77,6 +89,13 @@ def eliminar_galeria(request, pk):
         'messages': messages,
     })
 
+#
+# ────────────────────────────────────────────────────────────────
+#   :::::: C U A D R O S : :  :   :    :     :        :          :
+# ────────────────────────────────────────────────────────────────
+#
+
+# ─── CREAR CUADRO ───────────────────────────────────────────────────────────────
 def crear_cuadro(request):
     form = CuadroForm()
     state = 0
@@ -100,10 +119,12 @@ def crear_cuadro(request):
         'state': state
         })
 
+# ─── CONSULTA/LISTADO DE CUADROS ────────────────────────────────────────────────
 def consulta_cuadros(request):
     cuadros = Cuadro.objects.all()
     return render(request, 'lista_cuadros.html', {'cuadros': cuadros})
 
+# ─── MODIFICAR CUADRO ───────────────────────────────────────────────────────────
 def modificar_cuadro(request, pk):
     cuadro = Cuadro.objects.get(pk=pk) # TODO Implementar la posibilidad de que esto reviente
     form = CuadroForm(instance=cuadro)
@@ -127,6 +148,7 @@ def modificar_cuadro(request, pk):
         'pk' : pk
         })
 
+# ─── ELIMINAR CUADRO ────────────────────────────────────────────────────────────
 def eliminar_cuadro(request, pk):
     cuadro = Cuadro.objects.get(pk=pk)
     nombre_cuadro = cuadro.nombre
@@ -141,3 +163,5 @@ def eliminar_cuadro(request, pk):
         'errors': errors,
         'messages': messages,
     })
+
+# ────────────────────────────────────────────────────────────────────────────────

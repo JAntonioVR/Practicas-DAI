@@ -1,12 +1,18 @@
-# galerias/urls.py
+#
+# ──────────────────────────────────────────────────────────────────────────────────
+#   :::::: galerias/urls.py : :  :   :    :     :        :          :
+# ──────────────────────────────────────────────────────────────────────────────────
+#
+
+# ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+# ─── URLS ───────────────────────────────────────────────────────────────────────
 urlpatterns = [
     path('', views.index, name='index'),
-    path('test_template', views.test_template, name="test_template"),
     path('crear_galeria', views.crear_galeria, name="crear_galeria"),
     path('consulta_galerias', views.consulta_galerias, name="consulta_galerias"),
     path('modificar_galeria/<int:pk>', views.modificar_galeria, name="modificar_galeria"),
@@ -17,5 +23,6 @@ urlpatterns = [
     path('eliminar_cuadro/<int:pk>', views.eliminar_cuadro, name="eliminar_cuadro"),
 ]
 
+# ─── MEDIA ──────────────────────────────────────────────────────────────────────
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
