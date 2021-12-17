@@ -1,0 +1,40 @@
+<!--
+-- ─── INICIAR SESION ─────────────────────────────────────────────────────────────
+-->
+{% extends "index.html" %}
+
+{% block contenido %}
+
+{% if form.errors %}
+<p>Usuario o contraseña incorrectos. Inténtalo de nuevo.</p>
+{% endif %}
+
+{% if next %}
+{% if user.is_authenticated %}
+<p>Tu cuenta no tiene acceso a esta página. Inicia sesión
+    con una cuenta con acceso.</p>
+{% else %}
+<p>Inicia sesión para ver esta página</p>
+{% endif %}
+{% endif %}
+
+<h1>Iniciar Sesión</h1>
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+    <br>
+    <input type="submit" value="Iniciar Sesión" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}

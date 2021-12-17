@@ -1,0 +1,10 @@
+<!--
+-- ─── CERRAR SESION ──────────────────────────────────────────────────────────────
+-->
+
+{% extends "index.html" %}
+
+{% block contenido %}
+<h1>¡Hasta pronto!</h1>
+<a href="{% url 'login'%}">Iniciar sesión de nuevo</a>
+{% endblock %}

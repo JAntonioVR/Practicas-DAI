@@ -11,13 +11,22 @@
     <div class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ g.nombre }}</h5>
-            <small><a href="{% url 'modificar_galeria' g.id %}">Editar</a>
-                <a href="{% url 'eliminar_galeria' g.id %}">Eliminar</a></small>
+            <small>
+                {% if perms.galerias.change_galeria %}
+                <a href="{% url 'modificar_galeria' g.id %}">Editar</a>
+                {% endif %}
+                {% if perms.galerias.delete_galeria %}
+                <a href="{% url 'eliminar_galeria' g.id %}">Eliminar</a>
+                {% endif %}
+            </small>
+
         </div>
         <p class="mb-1">{{ g.direccion }}</p>
     </div>
     {% endfor %}
 </div>
 <br>
+{% if perms.galerias.add_galeria %}
 <a class="btn btn-primary" href="{% url 'crear_galeria' %}" role="button">Crear galería</a>
+{% endif %}
 {% endblock %}

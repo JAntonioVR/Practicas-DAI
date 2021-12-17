@@ -9,6 +9,7 @@ from django.shortcuts import render
 from .models import Galeria, Cuadro
 from .forms import GaleriaForm, CuadroForm
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import permission_required
 
 
 # ─── HOME ───────────────────────────────────────────────────────────────────────
@@ -23,6 +24,7 @@ def index(request):
 #
 
 # ─── CREAR GALERIA ──────────────────────────────────────────────────────────────
+@permission_required('galerias.add_galeria')
 def crear_galeria(request):
     form     = GaleriaForm()
     state    = 0
@@ -52,6 +54,7 @@ def consulta_galerias(request):
     return render(request, 'lista_galeria.html', {'galerias': galerias})
 
 # ─── MODIFICAR GALERIA ──────────────────────────────────────────────────────────
+@permission_required('galerias.change_galeria')
 def modificar_galeria(request, pk):
     errors   = []
     messages = []
@@ -81,6 +84,7 @@ def modificar_galeria(request, pk):
         })
 
 # ─── ELIMINAR GALERIA ───────────────────────────────────────────────────────────
+@permission_required('galerias.delete_galeria')
 def eliminar_galeria(request, pk):
     errors   = []
     messages = []
@@ -107,6 +111,7 @@ def eliminar_galeria(request, pk):
 #
 
 # ─── CREAR CUADRO ───────────────────────────────────────────────────────────────
+@permission_required('galerias.add_cuadro')
 def crear_cuadro(request):
     form = CuadroForm()
     state = 0
@@ -136,6 +141,7 @@ def consulta_cuadros(request):
     return render(request, 'lista_cuadros.html', {'cuadros': cuadros})
 
 # ─── MODIFICAR CUADRO ───────────────────────────────────────────────────────────
+@permission_required('galerias.change_cuadro')
 def modificar_cuadro(request, pk):
     state    = 0
     errors   = []
@@ -165,6 +171,7 @@ def modificar_cuadro(request, pk):
         })
 
 # ─── ELIMINAR CUADRO ────────────────────────────────────────────────────────────
+@permission_required('galerias.delete_cuadro')
 def eliminar_cuadro(request, pk):
     errors   = []
     messages = []

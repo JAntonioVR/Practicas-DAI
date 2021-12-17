@@ -11,8 +11,15 @@
     <div class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ c.nombre }}</h5>
-            <small><a href="{% url 'modificar_cuadro' c.id %}">Editar</a>
-                <a href="{% url 'eliminar_cuadro' c.id %}">Eliminar</a></small>
+            <small>
+
+                {% if perms.galerias.change_cuadro %}
+                <a href="{% url 'modificar_cuadro' c.id %}">Editar</a>
+                {% endif %}
+                {% if perms.galerias.delete_cuadro %}
+                <a href="{% url 'eliminar_cuadro' c.id %}">Eliminar</a>
+                {% endif %}
+            </small>
         </div>
         <p class="mb-1">{{ c.autor }}
             {% if c.fecha_creacion %}
@@ -27,6 +34,7 @@
     {% endfor %}
 </div>
 <br>
+{% if perms.galerias.add_cuadro %}
 <a class="btn btn-primary" href="{% url 'crear_cuadro' %}" role="button">Crear cuadro</a>
-
+{% endif %}
 {% endblock %}
