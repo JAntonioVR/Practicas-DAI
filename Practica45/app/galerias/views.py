@@ -7,9 +7,10 @@
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
 from django.shortcuts import render
 from .models import Galeria, Cuadro
-from .forms import GaleriaForm, CuadroForm
+from .forms import GaleriaForm, CuadroForm, UserForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.models import User
 
 
 # ─── HOME ───────────────────────────────────────────────────────────────────────
@@ -189,6 +190,34 @@ def eliminar_cuadro(request, pk):
         'errors'  : errors,
         'messages': messages,
     })
+
+# ─── CREAR USUARIO ──────────────────────────────────────────────────────────────
+def crear_usuario(request):
+    form = UserForm()
+    state = 0
+    errors = []
+    messages = []
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            User.objects.create_user(
+                username = form['username'].value(),
+                password = form['password'].value(),
+                email    = form['email'].value()
+            )
+            messages.append("Te has registrado con éxito, bienvenido a bordo!")
+            state = 1
+        else:
+            errors.append("Los datos introducidos no eran válidos.")
+            state = -1
+    else:
+        messages.append("Introduce un usuario y una contraseña:")
+    return render(request, 'registration/signup.html', { 
+        'form'    : form,
+        'errors'  : errors,
+        'messages': messages,
+        'state'   : state
+        })
 
 # ────────────────────────────────────────────────────────────────────────────────
 

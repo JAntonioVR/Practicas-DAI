@@ -5,9 +5,9 @@
 #
 
 # ─── IMPORTS ────────────────────────────────────────────────────────────────────
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField, PasswordInput
 from .models import Galeria, Cuadro
-
+from django.contrib.auth.models import User
 #
 # ────────────────────────────────────────────────────────────────────────
 #   :::::: F O R M U L A R I O S : :  :   :    :     :        :          :
@@ -27,5 +27,15 @@ class CuadroForm(ModelForm):
     class Meta:
         model = Cuadro
         fields = ['nombre', 'galeria', 'autor', 'fecha_creacion', 'imagen']
+
+# ─── UserForm ───────────────────────────────────────────────────────────────────
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        password = CharField(widget=PasswordInput)
+        fields = ['username', 'password', 'email']
+        widgets = {
+            'password': PasswordInput
+        }
 
 # ────────────────────────────────────────────────────────────────────────────────

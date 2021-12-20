@@ -21,6 +21,7 @@ urlpatterns = [
     path('consulta_cuadros', views.consulta_cuadros, name="consulta_cuadros"),
     path('modificar_cuadro/<int:pk>', views.modificar_cuadro, name="modificar_cuadro"),
     path('eliminar_cuadro/<int:pk>', views.eliminar_cuadro, name="eliminar_cuadro"),
+    path('crear_usuario', views.crear_usuario, name="crear_usuario")
 ]
 
 # ─── MEDIA ──────────────────────────────────────────────────────────────────────
