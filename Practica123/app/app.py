@@ -205,8 +205,6 @@ def page_not_found(error):
 # A partir de aquí se encuentra el código propio de la práctica 2
 
 # ─── INDEX ──────────────────────────────────────────────────────────────────────
-@app.route('/')
-@app.route('/index')
 def index():
     return render_template('index.html')
 
@@ -340,6 +338,9 @@ def ver_capitulos_temporada(temporada):
     return render_template('lista.html', status = status, episodios = lista_episodios, temporadas = temporadas, temporada_buscada = temporada)
 
 # ─── BUSQUEDA DE CAPITULOS POR TEMPORADA ────────────────────────────────────────
+# Ahora la página de los capítulos será la página principal
+@app.route("/")
+@app.route('/index')
 @app.route("/busca_coleccion/<int:temporada>")
 @app.route("/busca_coleccion", methods=['GET', 'POST'])
 def busca_coleccion(temporada=0):
