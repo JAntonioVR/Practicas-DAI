@@ -13,16 +13,43 @@
 
 <h1>Búsqueda de capítulos de Friends:</h1>
 
-<!-- Menu desplegable con las posibles temporadas -->
-<form name="Item_1" action="/busca_coleccion" method="POST">
-    <label for="exampleFormControlFile2">Temporada: </label>
-    <select name="temporada">
-        {% for temporada in temporadas %}
-        <option value="{{ temporada }}" SELECTED>{{ temporada }}</option>
-        {% endfor %}
-    </select>
-    <button class="btn btn-primary" type="submit">Buscar</button>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- Menu desplegable con las posibles temporadas -->
+            <form name="Item_1" action="/busca_coleccion" method="POST">
+                <label for="exampleFormControlFile2">Temporada: </label>
+                <select name="temporada">
+                    {% for temporada in temporadas %}
+                    <option value="{{ temporada }}" SELECTED>{{ temporada }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="col">
+            <div class="buscador">
+                <div class="input-group">
+                    <input type="search" class="form-control rounded" placeholder="Buscar por nombre"
+                        aria-label="Buscar por nombre" aria-describedby="search-addon" />
+                    <button type="button" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="col">
+                <div class="boton_anadir">
+                    <button type="button" class="btn btn-primary" id="anadir">Añadir un nuevo episodio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 {% if status == 1 %}
 
@@ -39,6 +66,21 @@
                     <img src="{{ episodio.image.medium }}">
                     <p>{{ episodio.name }}</p>
                 </a>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="boton_borrar">
+                                <button type="button" class="btn btn-primary" id="borrar">Borrar</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="boton_editar">
+                                <button type="button" class="btn btn-primary" id="modificar">Editar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

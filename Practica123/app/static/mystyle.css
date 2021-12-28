@@ -19,3 +19,19 @@
 .episodio:hover{
     background-color: #dee2e6;
 }
+
+.boton_borrar{
+    padding: 1pt;
+}
+
+.boton_editar{
+    padding: 1pt;
+}
+
+.buscador{
+    width: 100%;
+}
+
+.boton_anadir{
+    padding-top: 5pt;
+}
