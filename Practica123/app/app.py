@@ -391,8 +391,7 @@ def busca_episodio():
             return "\n".join([str(episodio) for episodio in episodios]), 200
         else:
             return "No se ha encontrado ningún episodio.", 200
-
-
+import json
 # ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
 # En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
 # serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
@@ -404,15 +403,13 @@ def busca_episodio():
 # entero único para el nuevo episodio.
 @app.route('/episodio', methods=['POST'])
 def anade_episodio():
-    params = request.get_json()
+    params = request.get_json(force=True)
     if params == None:
-        return "Error: No se ha encontrado fichero de entrada", 400
-    elif 'anadir' not in params:
-        return "Error: El fichero de entrada no tiene el formato correcto", 400
-    elif 'name' not in params['anadir']:
-        return "Error: Es obligatorio especificar el episodio", 400 
+        return "Error: No se ha encontrado entrada", 200
+    elif 'name' not in params:
+        return "Error: Es obligatorio especificar el episodio", 200 
     else:
-        args = params['anadir']
+        args = params
         db = DatabaseFriends()
         salida = db.anade_episodio(args)
         salida = "Se ha añadido un nuevo episodio:  " + str(salida)

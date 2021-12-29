@@ -1,17 +1,11 @@
 {
+
   "busqueda": {
     "nombre": "invented"
   },
 
   "anadir": {
-    "name": "The One I've just invented",
-    "season": 9,
-    "number": 1000,
-    "summary": "No se que poner",
-    "image": {
-      "medium": "https://images.mediotiempo.com/hrm9IC552FaAV6dL9txLbAzyOYE=/958x596/uploads/media/2019/07/10/a-partid-de-formara-parte.jpg",
-      "original": "https://images.mediotiempo.com/hrm9IC552FaAV6dL9txLbAzyOYE=/958x596/uploads/media/2019/07/10/a-partid-de-formara-parte.jpg"
-    }
+
   },
 
   "modificar": {
@@ -24,4 +18,6 @@
   "eliminar":{
     "id": 40882
   }
+
+  
 }
