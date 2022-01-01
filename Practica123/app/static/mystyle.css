@@ -35,3 +35,7 @@
 .boton_anadir{
     padding-top: 5pt;
 }
+
+.episodio input{
+    width: 100%;
+}

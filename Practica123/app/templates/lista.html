@@ -31,8 +31,8 @@
             <div class="buscador">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" placeholder="Buscar por nombre"
-                        aria-label="Buscar por nombre" aria-describedby="search-addon" />
-                    <button type="button" class="btn btn-primary">Buscar</button>
+                        aria-label="Buscar por nombre" aria-describedby="search-addon" id="input_buscar" />
+                    <button type="button" class="btn btn-primary" id="boton_buscar">Buscar</button>
                 </div>
             </div>
         </div>
@@ -87,17 +87,42 @@
                     <div class="row">
                         <div class="col">
                             <div class="boton_borrar">
-                                <button type="button" class="btn btn-primary" id="borrar">Borrar</button>
+                                <button type="button" class="btn btn-primary" id="boton_borrar"
+                                    onclick="delete_cap({{ episodio.id }})">Borrar</button>
                             </div>
                         </div>
                         <div class="col">
                             <div class="boton_editar">
-                                <button type="button" class="btn btn-primary" id="modificar">Editar</button>
+                                <button type="button" class="btn btn-primary" id="boton_modificar"
+                                    onclick="mostrar_formulario({{ episodio.id }})">Editar</button>
                             </div>
 
                         </div>
                     </div>
                 </div>
+                <form id="formulario_modificar_capitulo_{{episodio.id | int}}" class="formulario_modificar_episodio"
+                    method=put>
+                    <dl>
+                        <dt>ID:
+                        <dd><input type="text" name=id value={{ episodio.id }} readonly>
+                        <dt>Nombre:
+                        <dd><input type=text name=name value="{{ episodio['name'] }}">
+                        <dt>Temporada:
+                        <dd><input type=number name=season value="{{ episodio['season'] }}">
+                        <dt>Número:
+                        <dd><input type=number name=number value="{{ episodio['number'] }}">
+                        <dt>Sinopsis:
+                        <dd><input type=text name=summary value="{{ episodio['summary'] }}">
+                        <dt>URL imagen MEDIUM:
+                        <dd><input type=text name=image_medium value="{{ episodio['image']['medium'] }}">
+                        <dt>URL imagen ORIGINAL:
+                        <dd><input type=text name=image_original value="{{ episodio['image']['original'] }}">
+                    </dl>
+                    <p><button type="button" class="btn btn-primary" id="boton_modificar_capitulo_{{episodio.id | int}}"
+                            onclick=modify_cap({{ episodio.id }})>
+                            Modificar</button>
+                </form>
+
             </div>
 
         </div>

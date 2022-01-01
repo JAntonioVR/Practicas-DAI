@@ -370,20 +370,19 @@ def busca_coleccion(temporada=0):
 # Devuelve todos los episodios encontrados en formato json.
 @app.route('/episodio', methods=['GET'])
 def busca_episodio():
-    params = request.get_json()
+
+    params = request.get_json(force=True)
 
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
-    elif 'busqueda' not in params:
-        return "Error: El fichero de entrada no tiene el formato correcto", 400
-    elif 'nombre' not in params['busqueda'] and 'sinopsis' not in params['busqueda']:
+    elif 'nombre' not in params and 'sinopsis' not in params:
         return "Error: No se ha especificado ningún criterio a buscar", 400
     else:
         nombre, sinopsis = "", ""
-        if 'nombre' in params['busqueda']:
-            nombre = params['busqueda']['nombre']
-        if 'sinopsis' in params['busqueda']:
-            sinopsis = params['busqueda']['sinopsis']
+        if 'nombre' in params:
+            nombre = params['nombre']
+        if 'sinopsis' in params:
+            sinopsis = params['sinopsis']
 
         db = DatabaseFriends()
         episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
@@ -391,7 +390,8 @@ def busca_episodio():
             return "\n".join([str(episodio) for episodio in episodios]), 200
         else:
             return "No se ha encontrado ningún episodio.", 200
-import json
+
+# FIXME
 # ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
 # En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
 # serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
@@ -425,16 +425,14 @@ def anade_episodio():
 # del episodio modificado en caso de éxito.
 @app.route('/episodio', methods=['PUT'])
 def modifica_episodio():
-    params = request.get_json()
+    params = request.get_json(force=True)
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
-    elif 'modificar' not in params:
-        return "Error: El fichero de entrada no tiene el formato correcto", 400
-    elif 'id' not in params['modificar']:
+    elif 'id' not in params:
         return "Error: No se ha especificado el id del episodio a modificar", 400
     else:
-        id_episodio = int(params['modificar']['id'])
-        args = params['modificar']
+        id_episodio = int(params['id'])
+        args = params
 
         # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
@@ -458,12 +456,10 @@ def elimina_episodio():
     params = request.get_json()
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
-    elif 'eliminar' not in params:
-        return "Error: Formato incorrecto", 400 
-    elif 'id' not in params['eliminar']:
+    elif 'id' not in params:
         return "Error: No se ha especificado el id del episodio a eliminar", 400
     else:
-        id_episodio = params['eliminar']['id']
+        id_episodio = params['id']
         db = DatabaseFriends()
         result = db.elimina_episodio(id_episodio)
         if(result):
@@ -473,3 +469,10 @@ def elimina_episodio():
             return "Ha ocurrido algún error en la eliminación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
 
 # ────────────────────────────────────────────────────────────────────────────────
+
+
+@app.route('/formulario_modificar/<int:id>')
+def formulario_modificar(id):
+    db = DatabaseFriends()
+    episodio = db.busca_episodio_id(id)
+    return render_template('modify_episode.html', id = id, episodio = episodio)
