@@ -8,18 +8,19 @@ $(function(){                          // jQuery function
     $('#boton_anadir_capitulo').click(
       function(){
         form_data = $('#formulario_anadir_capitulo').serializeArray()
+        nuevo_episodio = JSON.stringify({
+          "name": form_data[0].value,
+          "season": form_data[1].value,
+          "number": form_data[2].value,
+          "summary": form_data[3].value,
+          "image": {
+            "medium": form_data[4].value,
+            "original": form_data[5].value
+          }
+        })
         $.ajax({
           url: "/episodio",
-          data: JSON.stringify({
-              "name": form_data[0].value,
-              "season": form_data[1].value,
-              "number": form_data[2].value,
-              "summary": form_data[3].value,
-              "image": {
-                "medium": form_data[4].value,
-                "original": form_data[5].value
-              }
-          }),
+          data: nuevo_episodio,
           type: "POST",
           dataType: "json",
           error : function(xhr, status) {
@@ -65,7 +66,7 @@ function modify_cap(id){
   $.ajax({
     url: "/episodio",
     data: JSON.stringify({
-        "id": form_data[0].value,
+        "id": parseInt(form_data[0].value),
         "name": form_data[1].value,
         "season": form_data[2].value,
         "number": form_data[3].value,
@@ -91,7 +92,7 @@ function delete_cap(id){
   $.ajax({
     url: "/episodio",
     data: JSON.stringify({
-      "id": id
+      "id": parseInt(id)
     }),
     type: "DELETE",
     dataType: "json",
@@ -100,7 +101,8 @@ function delete_cap(id){
     },
 
     success : function(json) {
-      console.log(json)
+      alert(json)
+      location.reload()
     }
   })
 }

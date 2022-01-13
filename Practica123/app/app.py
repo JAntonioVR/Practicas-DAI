@@ -19,7 +19,7 @@ import random
 
 from modelUsers import DatabaseUsers
 from modelFriends import DatabaseFriends
-from flask import Flask, render_template, flash, render_template, request, session
+from flask import Flask, render_template, flash, render_template, request, session, jsonify
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -372,7 +372,7 @@ def busca_coleccion(temporada=0):
 def busca_episodio():
 
     params = request.get_json(force=True)
-
+    return params
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
     elif 'nombre' not in params and 'sinopsis' not in params:
@@ -404,6 +404,7 @@ def busca_episodio():
 @app.route('/episodio', methods=['POST'])
 def anade_episodio():
     params = request.get_json(force=True)
+    
     if params == None:
         return "Error: No se ha encontrado entrada", 200
     elif 'name' not in params:
@@ -431,12 +432,11 @@ def modifica_episodio():
     elif 'id' not in params:
         return "Error: No se ha especificado el id del episodio a modificar", 400
     else:
-        id_episodio = int(params['id'])
-        args = params
-
+        id_episodio = params['id']
+        
         # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
-        result = db.modifica_episodio(args)
+        result = db.modifica_episodio(params)
 
         # Comprobamos que todo haya ido bien
         if result != None:
@@ -453,7 +453,7 @@ def modifica_episodio():
 # un mensaje de éxito o error.
 @app.route('/episodio', methods=['DELETE'])
 def elimina_episodio():
-    params = request.get_json()
+    params = request.get_json(force=True)
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
     elif 'id' not in params:
@@ -463,16 +463,10 @@ def elimina_episodio():
         db = DatabaseFriends()
         result = db.elimina_episodio(id_episodio)
         if(result):
+
             salida = "Se ha eliminado el episodio de id " + str(id_episodio)
-            return salida, 200
+            return jsonify(salida), 200
         else:
             return "Ha ocurrido algún error en la eliminación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
 
 # ────────────────────────────────────────────────────────────────────────────────
-
-
-@app.route('/formulario_modificar/<int:id>')
-def formulario_modificar(id):
-    db = DatabaseFriends()
-    episodio = db.busca_episodio_id(id)
-    return render_template('modify_episode.html', id = id, episodio = episodio)

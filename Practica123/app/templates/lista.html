@@ -78,7 +78,7 @@
         {% for episodio in episodios %}
         <div class="col">
 
-            <div class="episodio">
+            <div class="episodio" id="episodio_{{ episodio.id }}">
                 <a href="{{ episodio.url }}">
                     <img src="{{ episodio.image.medium }}">
                     <p>{{ episodio.name }}</p>
