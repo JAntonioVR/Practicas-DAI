@@ -92,6 +92,7 @@ class DatabaseFriends:
         } )
 
         for episodio in episodios_buscados:
+            episodio['_id'] = ""
             lista_episodios.append(episodio)
 
         return lista_episodios
@@ -111,12 +112,15 @@ class DatabaseFriends:
     # Devuelve el objeto json con el episodio modificado en caso de exito o None
     # si no se ha completado la modificación
     def modifica_episodio(self, episodio):
+
         result = self.episodios.update(
             { 'id': episodio['id'] },
             {'$set': episodio}
         )
+        # print(result, flush=True)
         if result['updatedExisting']:
             episodio = self.busca_episodio_id(episodio['id'])
+            print(episodio, flush=True)
             return episodio
         else:
             return None

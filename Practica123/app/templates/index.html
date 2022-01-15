@@ -65,7 +65,23 @@
 				</ul>
 				<div class="d-flex">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+						<li class="nav-item">
+							<div class="wrapper">
+								<button class="btn btn-primary" id="css-toggle-btn">Modo nocturno</button>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="wrapper">
+								<button class="btn btn-primary" id="boton_disminuir_tamano">Disminuir tamaño de la
+									letra</button>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="wrapper">
+								<button class="btn btn-primary" id="boton_aumentar_tamano">Aumentar tamaño de la
+									letra</button>
+							</div>
+						</li>
 						{% if session["username"] %}
 						<li class="nav-item">
 							<a class="nav-link" href="{{ url_for('profile') }}">Bienvenido, {{ session['username'] }}
@@ -83,9 +99,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{{ url_for('login') }}"><span
 									class="glyphicon glyphicon-log-in"></span> Login </a>
-						</li>
-						<li class="nav-item">
-							<button class="btn btn-primary" id="css-toggle-btn">Modo nocturno</button>
 						</li>
 						{% endif %}
 					</ul>

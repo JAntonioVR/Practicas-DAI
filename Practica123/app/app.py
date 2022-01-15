@@ -19,7 +19,8 @@ import random
 
 from modelUsers import DatabaseUsers
 from modelFriends import DatabaseFriends
-from flask import Flask, render_template, flash, render_template, request, session, jsonify
+from flask import Flask, render_template, flash, render_template, request, session, jsonify, json
+
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -369,15 +370,17 @@ def busca_coleccion(temporada=0):
 # no se especifica se busca solo en base al otro.
 # Devuelve todos los episodios encontrados en formato json.
 @app.route('/episodio', methods=['GET'])
+@app.route('/consulta_api', methods=['POST'])
 def busca_episodio():
 
     params = request.get_json(force=True)
-    return params
+    
     if params == None:
         return "Error: No se ha encontrado fichero de entrada", 400
     elif 'nombre' not in params and 'sinopsis' not in params:
         return "Error: No se ha especificado ningún criterio a buscar", 400
     else:
+        print(params, flush=True)
         nombre, sinopsis = "", ""
         if 'nombre' in params:
             nombre = params['nombre']
@@ -387,9 +390,13 @@ def busca_episodio():
         db = DatabaseFriends()
         episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
         if len(episodios) > 0:
-            return "\n".join([str(episodio) for episodio in episodios]), 200
+            print(json.dumps(episodios))
+            return json.dumps(episodios), 200
         else:
-            return "No se ha encontrado ningún episodio.", 200
+            salida = json.dumps({
+                "message": "No se ha encontrado ningún episodio de acuerdo a la búsqueda"
+            })
+            return salida, 200
 
 # FIXME
 # ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
@@ -433,17 +440,20 @@ def modifica_episodio():
         return "Error: No se ha especificado el id del episodio a modificar", 400
     else:
         id_episodio = params['id']
-        
         # Modificamos el documento con los nuevos datos
         db = DatabaseFriends()
         result = db.modifica_episodio(params)
 
         # Comprobamos que todo haya ido bien
         if result != None:
-            salida = "Se ha modificado el episodio de id " + str(id_episodio) + "  " + str(result)
+            result['_id'] = ""
+            salida = json.dumps(result)
             return salida, 200
         else:
-            return "Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
+            salida = json.dumps({
+                "message": "Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?"
+            })
+            return salida, 400
 
 
 # ─── BORRAR EPISODIO ────────────────────────────────────────────────────────────

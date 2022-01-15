@@ -38,24 +38,74 @@ $(function(){                          // jQuery function
       function(){
         data = $('#input_buscar').val()
         $.ajax({
-          url: "/episodio",
+          url: "/consulta_api",
           data: JSON.stringify({
-            "name": data
+            "nombre": data
           }),
-          type: "GET",
+          type: "POST",
           dataType: "json",
           error : function(xhr, status) {
             alert('Disculpe, existió un problema\n' + xhr );
           },
 
           success : function(json) {
-            console.log(json)
+            $('#titulo_resultado_api').html("<h3>Resultados de la búsqueda con \"" + data + "\"</h3>")
+            let salida = ""
+            if (!('message' in json)) {
+              salida = render_output_episodes(json)
+            } else {
+              $('#episodios_api').removeClass()  
+              salida = "<p>" + json['message'] + "</p>"
+            }
+            $('#episodios_api').html(salida)
           }
         })
       }
     )
 
+    let zoom = 100
+    $('#boton_disminuir_tamano').click(
+      function(){
+        if(zoom > 30){
+          zoom -= 5
+          document.body.style.zoom = zoom.toString().concat("%")
+        }
+        
+      }
+    )
+    $('#boton_aumentar_tamano').click(
+      function(){
+        if(zoom < 200){
+          zoom += 5
+          document.body.style.zoom = zoom.toString().concat("%")
+        }
+        
+      }
+    )
+
  });
+
+function render_output_episodes(episodios){
+  let salida = ""
+  if(episodios.length > 0){
+    for (let i = 0; i < episodios.length; i++) {
+      const episodio = episodios[i];
+      salida += 
+      "<div class=\"col\">" +
+        "<div class=\"episodio\">" +
+          "<a href=\"" + episodio['url'] + "\">"
+          if (episodio['image'] != null && episodio['image']['medium'] != null) {
+            salida += "<img src=\""+ episodio['image']['medium'] + "\">"
+          }
+          salida += 
+            "<p>" + episodio['name'] + "</p>" +
+          "</a>" +
+        "</div>" +
+      "</div>"
+    }
+  }
+  return salida
+}
 
 function mostrar_formulario(id){
   $('#formulario_modificar_capitulo_'.concat(id)).show()
@@ -68,8 +118,8 @@ function modify_cap(id){
     data: JSON.stringify({
         "id": parseInt(form_data[0].value),
         "name": form_data[1].value,
-        "season": form_data[2].value,
-        "number": form_data[3].value,
+        "season": parseInt(form_data[2].value),
+        "number": parseInt(form_data[3].value),
         "summary": form_data[4].value,
         "image": {
           "medium": form_data[5].value,
@@ -81,9 +131,18 @@ function modify_cap(id){
     error : function(xhr, status) {
       alert('Disculpe, existió un problema\n' + xhr );
     },
-
     success : function(json) {
-      console.log(json)
+      $('#titulo_resultado_api').html("<h3>Resultado de la modificación:</h3>")
+      let salida = ""
+      if(!('message' in json)){
+        $('#titulo_resultado_api').append("<p>Se ha modificado el siguiente episodio:</p>")
+        salida = render_output_episodes([json])
+      } else{
+        $('#episodios_api').removeClass()  
+        salida = "<p>" + json['message'] + "</p>"
+      }
+      $('#episodios_api').html(salida)
+      $('html, body').animate({ scrollTop: 0 }, 'fast')
     }
   })
 }
@@ -106,6 +165,8 @@ function delete_cap(id){
     }
   })
 }
+
+
 
  $(document).ready(function(){
 
