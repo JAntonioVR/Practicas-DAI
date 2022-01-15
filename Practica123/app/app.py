@@ -1,11 +1,8 @@
-# ./app/app.py
-
 #
 # ────────────────────────────────────────────────────────────
 #   :::::: app.py : :  :   :    :     :        :          :
 # ────────────────────────────────────────────────────────────
 #
-# Práctica 2 de DAI: Plantillas, Manejo de Sesiones y Frameworks CSS
 # Autor: Juan Antonio Villegas Recio
 # Curso 2021-2022
 # Universidad de Granada
@@ -363,6 +360,12 @@ def busca_coleccion(temporada=0):
 # ──────────────────────────────────────────────────────────────────────────
 #
 
+# ─── PARSEO DE UN MENSAJE EN JSON ───────────────────────────────────────────────
+# Dado un mensaje, devuelve un objeto json con dicho mensaje en el campo 'message'
+def json_message_output(message):
+    return json.dumps({
+        'message': message
+    })
 
 # ─── BUSCAR EPISODIO POR NOMBRE Y SINOPSIS ──────────────────────────────────────
 # En el campo 'busqueda' debe haber un campo 'nombre' o un campo 'sinopsis'. 
@@ -377,9 +380,9 @@ def busca_episodio():
     params = request.get_json(force=True)
     
     if params == None:
-        return "Error: No se ha encontrado fichero de entrada", 400
+        return json_message_output("Error: No se ha encontrado entrada"), 400
     elif 'nombre' not in params and 'sinopsis' not in params:
-        return "Error: No se ha especificado ningún criterio a buscar", 400
+        return json_message_output("Error: No se ha especificado ningún criterio a buscar"), 400
     else:
         print(params, flush=True)
         nombre, sinopsis = "", ""
@@ -390,16 +393,14 @@ def busca_episodio():
 
         db = DatabaseFriends()
         episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
+
         if len(episodios) > 0:
             print(json.dumps(episodios))
             return json.dumps(episodios), 200
         else:
-            salida = json.dumps({
-                "message": "No se ha encontrado ningún episodio de acuerdo a la búsqueda"
-            })
-            return salida, 200
+            return json_message_output("No se ha encontrado ningún episodio de acuerdo a la búsqueda"), 200
 
-# FIXME
+
 # ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
 # En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
 # serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
@@ -414,9 +415,9 @@ def anade_episodio():
     params = request.get_json(force=True)
     
     if params == None:
-        return "Error: No se ha encontrado entrada", 200
-    elif 'name' not in params:
-        return "Error: Es obligatorio especificar el episodio", 200 
+        return json_message_output("Error: No se ha encontrado entrada"), 200
+    elif 'name' not in params or params['name'] == '':
+        return json_message_output("Error: Es obligatorio especificar el nombre del episodio"), 200 
     else:
         db = DatabaseFriends()
         result = db.anade_episodio(params)
@@ -425,10 +426,7 @@ def anade_episodio():
             salida = json.dumps(result)
             return salida, 200
         else:
-            salida = json.dumps({
-                "message": "Ha ocurrido algún error al insertar el nuevo episodio"
-            })
-            return salida, 400
+            return json_message_output("Ha ocurrido algún error al insertar el nuevo episodio"), 400
 
 
 # ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────
@@ -442,9 +440,9 @@ def anade_episodio():
 def modifica_episodio():
     params = request.get_json(force=True)
     if params == None:
-        return "Error: No se ha encontrado fichero de entrada", 400
+        return json_message_output("Error: No se ha encontrado fichero de entrada"), 400
     elif 'id' not in params:
-        return "Error: No se ha especificado el id del episodio a modificar", 400
+        return json_message_output("Error: No se ha especificado el id del episodio a modificar"), 400
     else:
         id_episodio = params['id']
         # Modificamos el documento con los nuevos datos
@@ -457,10 +455,7 @@ def modifica_episodio():
             salida = json.dumps(result)
             return salida, 200
         else:
-            salida = json.dumps({
-                "message": "Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?"
-            })
-            return salida, 400
+            return json_message_output("Ha ocurrido algún error en la modificación, ¿existe un capítulo con id " + str(id_episodio) + "?"), 400
 
 
 # ─── BORRAR EPISODIO ────────────────────────────────────────────────────────────
@@ -472,18 +467,16 @@ def modifica_episodio():
 def elimina_episodio():
     params = request.get_json(force=True)
     if params == None:
-        return "Error: No se ha encontrado fichero de entrada", 400
+        return json_message_output("Error: No se ha encontrado fichero de entrada"), 400
     elif 'id' not in params:
-        return "Error: No se ha especificado el id del episodio a eliminar", 400
+        return json_message_output("Error: No se ha especificado el id del episodio a eliminar"), 400
     else:
         id_episodio = params['id']
         db = DatabaseFriends()
         result = db.elimina_episodio(id_episodio)
         if(result):
-
-            salida = "Se ha eliminado el episodio de id " + str(id_episodio)
-            return jsonify(salida), 200
+            return json_message_output("Se ha eliminado el episodio de id " + str(id_episodio)), 200
         else:
-            return "Ha ocurrido algún error en la eliminación, ¿existe un capítulo con id " + str(id_episodio) + "?", 400
+            return json_message_output("Ha ocurrido algún error en la eliminación, ¿existe un capítulo con id " + str(id_episodio) + "?"), 400
 
 # ────────────────────────────────────────────────────────────────────────────────

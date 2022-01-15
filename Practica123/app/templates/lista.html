@@ -11,7 +11,7 @@
 
 {% block contenido %}
 
-<h1>Búsqueda de capítulos de Friends:</h1>
+<h1>Capítulos de Friends:</h1>
 
 <div class="container">
     <div class="row">
@@ -52,6 +52,8 @@
                             <dd><input type=number name=number>
                             <dt>Sinopsis:
                             <dd><input type=text name=summary>
+                            <dt>URL del episodio:
+                            <dd><input type=text name=url>
                             <dt>URL imagen MEDIUM:
                             <dd><input type=text name=image_medium>
                             <dt>URL imagen ORIGINAL:
@@ -66,7 +68,7 @@
 </div>
 
 <div id="titulo_resultado_api"></div>
-<div class="row row-cols-3" id="episodios_api">
+<div id="episodios_api">
 
 </div>
 
@@ -116,6 +118,8 @@
                         <dd><input type=number name=number value="{{ episodio['number'] }}">
                         <dt>Sinopsis:
                         <dd><input type=text name=summary value="{{ episodio['summary'] }}">
+                        <dt>URL del episodio:
+                        <dd><input type=text name=url value="{{ episodio['url'] }}">
                         <dt>URL imagen MEDIUM:
                         <dd><input type=text name=image_medium value="{{ episodio['image']['medium'] }}">
                         <dt>URL imagen ORIGINAL:
