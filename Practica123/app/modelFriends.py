@@ -102,8 +102,10 @@ class DatabaseFriends:
     # valores del nuevo episodio se encuentran en el diccionario 'episodio'.
     # Devuelve el campo '_id' del nuevo episodio.
     def anade_episodio(self, episodio):
-        episodio['id'] = self.__buscar_primer_id_disponible__()
-        return self.episodios.insert(episodio)
+        new_id = self.__buscar_primer_id_disponible__()
+        episodio['id'] = new_id
+        self.episodios.insert(episodio)
+        return self.busca_episodio_id(new_id)
 
 
     # ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────

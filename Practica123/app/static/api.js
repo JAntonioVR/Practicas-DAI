@@ -10,8 +10,8 @@ $(function(){                          // jQuery function
         form_data = $('#formulario_anadir_capitulo').serializeArray()
         nuevo_episodio = JSON.stringify({
           "name": form_data[0].value,
-          "season": form_data[1].value,
-          "number": form_data[2].value,
+          "season": parseInt(form_data[1].value),
+          "number": parseInt(form_data[2].value)                                                                                                                                                                                                                                                                                          ,
           "summary": form_data[3].value,
           "image": {
             "medium": form_data[4].value,
@@ -28,7 +28,16 @@ $(function(){                          // jQuery function
           },
 
           success : function(json) {
-            console.log(json)
+            $('#titulo_resultado_api').html("<h3>Resultado de la inserción:</h3>")
+            let salida = ""
+            if(!('message' in json)){
+              $('#titulo_resultado_api').append("<p>Se ha añadido el siguiente episodio:</p>")
+              salida = render_output_episodes([json])
+            } else{
+              $('#episodios_api').removeClass()  
+              salida = "<p>" + json['message'] + "</p>"
+            }
+            $('#episodios_api').html(salida)
           }
         })
       }

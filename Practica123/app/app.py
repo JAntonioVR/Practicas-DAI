@@ -16,6 +16,7 @@
 import math
 import re
 import random
+from unittest import result
 
 from modelUsers import DatabaseUsers
 from modelFriends import DatabaseFriends
@@ -417,11 +418,17 @@ def anade_episodio():
     elif 'name' not in params:
         return "Error: Es obligatorio especificar el episodio", 200 
     else:
-        args = params
         db = DatabaseFriends()
-        salida = db.anade_episodio(args)
-        salida = "Se ha añadido un nuevo episodio:  " + str(salida)
-        return salida, 200
+        result = db.anade_episodio(params)
+        if result != None:
+            result['_id'] = ""
+            salida = json.dumps(result)
+            return salida, 200
+        else:
+            salida = json.dumps({
+                "message": "Ha ocurrido algún error al insertar el nuevo episodio"
+            })
+            return salida, 400
 
 
 # ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────
