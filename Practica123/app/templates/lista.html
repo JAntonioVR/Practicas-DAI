@@ -28,6 +28,8 @@
             </form>
         </div>
         <div class="col">
+
+            <!-- Frontend de la busqueda de episodios por nombre -->
             <div class="buscador">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" placeholder="Buscar por nombre"
@@ -35,11 +37,14 @@
                     <button type="button" class="btn btn-primary" id="boton_buscar">Buscar</button>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="row">
         <div class="col">
             <div class="col">
+
+                <!-- Frontend de añadir nuevo episodio -->
                 <div class="boton_anadir">
                     <button type="button" class="btn btn-primary" id="anadir">Añadir un nuevo episodio</button>
                     <form id="formulario_anadir_capitulo" method=post>
@@ -62,16 +67,17 @@
                         <p><button type="button" class="btn btn-primary" id="boton_anadir_capitulo">Añadir</button>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 
+<!-- Resultados devueltos por la API REST -->
 <div id="titulo_resultado_api"></div>
 <div id="episodios_api">
 
 </div>
-
 
 {% if status == 1 %}
 
@@ -91,12 +97,17 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
+
+                            <!-- Frontend de eliminar episodio -->
                             <div class="boton_borrar">
                                 <button type="button" class="btn btn-primary" id="boton_borrar"
                                     onclick="delete_cap({{ episodio.id }})">Borrar</button>
                             </div>
+
                         </div>
                         <div class="col">
+
+                            <!-- Mostrar formulario para modificar episodio -->
                             <div class="boton_editar">
                                 <button type="button" class="btn btn-primary" id="boton_modificar"
                                     onclick="mostrar_formulario({{ episodio.id }})">Editar</button>
@@ -105,6 +116,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Frontend de modificar episodio -->
                 <form id="formulario_modificar_capitulo_{{episodio.id | int}}" class="formulario_modificar_episodio"
                     method=put>
                     <dl>
@@ -131,7 +144,6 @@
                 </form>
 
             </div>
-
         </div>
         {% endfor %}
     </div>
