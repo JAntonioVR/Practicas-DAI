@@ -133,11 +133,11 @@ $(function(){                          // jQuery function
       if(data != ''){
         // Llamada a ajax
         $.ajax({
-          url: "/consulta_api",
-          data: JSON.stringify({
-            "nombre": data
-          }),
-          type: "POST",
+          url: "/episodio",
+          data: {
+            'nombre': data
+          },
+          type: "GET",
           dataType: "json",
           error : function(xhr, status) {
             alert('Disculpe, existió un problema\n' + xhr );

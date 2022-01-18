@@ -33,9 +33,7 @@
 {% endif %}
 {% endwith %}
 
-<form action={{ url_for('login') }}>
-    <input type="submit" value="Login" />
-</form>
+<button action="{{ url_for('login') }}" type="submit"> Login </button>
 
 {% endif %}
 {% endblock %}

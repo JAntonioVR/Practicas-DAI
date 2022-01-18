@@ -114,7 +114,6 @@ class DatabaseFriends:
     # Devuelve el objeto json con el episodio modificado en caso de exito o None
     # si no se ha completado la modificación
     def modifica_episodio(self, episodio):
-
         result = self.episodios.update(
             { 'id': episodio['id'] },
             {'$set': episodio}

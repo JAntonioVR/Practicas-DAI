@@ -13,11 +13,10 @@
 import math
 import re
 import random
-from unittest import result
 
 from modelUsers import DatabaseUsers
 from modelFriends import DatabaseFriends
-from flask import Flask, render_template, flash, render_template, request, session, jsonify, json
+from flask import Flask, render_template, flash, render_template, request, session, json
 
 
 app = Flask(__name__)
@@ -230,7 +229,7 @@ def login():
 # ─── LOG OUT ─────────────────────────────────────────────────────────────────────
 @app.route('/logout')
 def logout():
-    session['username'] = None
+    session.pop('username', None)
     return render_template('logout.html')
 
 
@@ -368,29 +367,35 @@ def json_message_output(message):
     })
 
 # ─── BUSCAR EPISODIO POR NOMBRE Y SINOPSIS ──────────────────────────────────────
-# En el campo 'busqueda' debe haber un campo 'nombre' o un campo 'sinopsis'. 
+# Si se usa la API por la terminal, debe recibir como entrada un objeto JSON en el
+# que debe haber un campo 'nombre' o un campo 'sinopsis'. Si se usa el front-end,
+# a través del buscador y de ajax params tomará el formato adecuado para poder
+# buscar por nombre.
 # Se buscarán episodios que contengan la subcadena 'nombre' en el nombre del 
 # episodio y la subcadena 'sinopsis' en la sinopsis. Si alguno de los dos campos
 # no se especifica se busca solo en base al otro.
 # Devuelve todos los episodios encontrados en formato json.
 @app.route('/episodio', methods=['GET'])
-@app.route('/consulta_api', methods=['POST'])
+@app.route('/episodio?nombre=<string:nombre>', methods=['GET'])
 def busca_episodio():
 
-    params = request.get_json(force=True)
+    # El argumento viene por URL (frontend)
+    params = request.args
+    # El argumento viene por JSON (terminal)
+    if(not bool(params)):
+        params = request.get_json(force=True)
     
     if params == None:
         return json_message_output("Error: No se ha encontrado entrada"), 400
     elif 'nombre' not in params and 'sinopsis' not in params:
         return json_message_output("Error: No se ha especificado ningún criterio a buscar"), 400
     else:
-        print(params, flush=True)
         nombre, sinopsis = "", ""
         if 'nombre' in params:
             nombre = params['nombre']
         if 'sinopsis' in params:
             sinopsis = params['sinopsis']
-
+        print(nombre, sinopsis, flush=True)
         db = DatabaseFriends()
         episodios = db.busca_episodios_nombre_sinopsis(nombre, sinopsis)
 
@@ -402,7 +407,7 @@ def busca_episodio():
 
 
 # ─── INSERTAR EPISODIO NUEVO ────────────────────────────────────────────────────
-# En el campo 'anadir' debe haber un diccionario con varios pares clave-valor que
+# En request debe haber un diccionario JSON con varios pares clave-valor que
 # serán los campos que tendrá el nuevo episodio que se añada. Se aceptan los 
 # atributos 'url', 'name', 'season', 'number', 'airdate', 'airtime', 'airstamp',
 # 'runtime', 'image' y 'summary', aunque todos ellos salvo 'name' son opcionales.
@@ -430,7 +435,7 @@ def anade_episodio():
 
 
 # ─── MODIFICAR EPISODIO ─────────────────────────────────────────────────────────
-# En el campo 'modificar' debe haber un diccionario con varios pares clave-valor 
+# En request debe haber un diccionario JSON con varios pares clave-valor 
 # que serán los nuevos valores del episodio. En este caso se requiere también un
 # par clave valor para el atributo 'id', para así referenciar qué capítulo se
 # desea modificar. El episodio referenciado se modifica si existe y se devuelve
@@ -459,8 +464,8 @@ def modifica_episodio():
 
 
 # ─── BORRAR EPISODIO ────────────────────────────────────────────────────────────
-# En el campo 'eliminar' debe haber un diccionario con un único par clave-valor,
-# el correspondiente al identificador único del episodio que se desea eliminar, 
+# En request debe haber un diccionario JSON con un único par clave-valor, el
+# correspondiente al identificador único del episodio que se desea eliminar, 
 # 'id'. Se elimina el episodio referenciado si existe y se muestra como salida
 # un mensaje de éxito o error.
 @app.route('/episodio', methods=['DELETE'])
